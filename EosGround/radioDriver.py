@@ -3,29 +3,33 @@ from digi.xbee.devices import RemoteXBeeDevice
 from digi.xbee.devices import XBee64BitAddress
 import psycopg2
 PORT = "COM9"
+conn = psycopg2.connect(
+        database="postgres", user='postgres', password='password', host='127.0.0.1', port='5432'
+    )
+conn.autocommit = True
+
+# Creating a cursor object using the cursor() method
+cursor = conn.cursor()
+
+# Creating a database
+cursor.execute("CREATE TABLE data(id SERIAL_PRIMARY_KEY ,name Raw, name Read)")
+conn.commit()
+print("Database created successfully........")
+
+# Closing the connection
+conn.close()
 class RadioDriver():
-    device = XBeeDevice(PORT, 9600)
+    device = XBeeDevice("COM9", 9600)
     device.open()
-    global PORT
+
+    # Closing the connection
+    conn.close()
     def radio_read(self):
         ##read from digi
         message = self.device.add_data_received_callback(self.data_receive_callback)
         ##write to database
-        try:
-            connection = psycopg2.connect(user="sysadmin",
-                                      password="pynative@#29",
-                                      host="127.0.0.1",
-                                      port="9600",
-                                      database="postgres_db")
-            cursor = connection.cursor()
-            postgres_insert_query = """ INSERT (ID, Text, READ) VALUES (%s,%s,%b)"""
-            record_to_insert = (PRIMARY_KEY, message, True);
-            cursor.execute(postgres_insert_query, record_to_insert)
-            connection.commit()
-            count = cursor.rowcount
-            print(count, "Record inserted successfully into mobile table")
-        except (Exception, psycopg2.Error) as error:
-            print("Failed to insert record into table: ", error)
+        cursor.execute("INSERT INTO data (id) VALUE(%s)",SERIAL_PRIMARY_KEY)
+
         ##PRIMARY_KEY AUTO_INCREMENT;
         return 0
     def radio_send(self):
