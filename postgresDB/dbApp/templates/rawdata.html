@@ -1,0 +1,22 @@
+
+
+ <div className="container">
+    <table className="dataTable">
+        <tr className="headers">
+            <th> ID </th>
+            <th> Packet Type </th>
+            <th> Priority </th>
+            <th> Device </th>
+            <th> Body </th>
+        </tr>
+        {% for data in allData%}
+        <tr>
+            <!-- <td> {{ data.ID }} </td> -->
+            <td> {{ data.packet_type }} </td>
+            <td> {{ data.priority }} </td>
+            <td> {{ data.device }} </td>
+            <td> {{ data.body }} </td>
+        </tr>
+        {% endfor %}
+    </table>
+ </div>
