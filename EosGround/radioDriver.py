@@ -1,20 +1,42 @@
 from digi.xbee.devices import XBeeDevice
 from digi.xbee.devices import RemoteXBeeDevice
 from digi.xbee.devices import XBee64BitAddress
+
+from EosLib.packet.packet import Packet
+
 import psycopg2
-PORT = "COM9"
+import time
+
+PORT = "COM5"
 conn = psycopg2.connect(
-        database="postgres", user='postgres', password='password', host='127.0.0.1', port='5432'
-    )
+    database="postgres", user='postgres', password='password', host='localhost', port='5432'
+)
 conn.autocommit = True
 
 # Creating a cursor object using the cursor() method
 cursor = conn.cursor()
 
+device = XBeeDevice(PORT, 9600)
+device.open()
+
+def data_receive_callback(xbee_message):
+    packet = Packet.decode(xbee_message.data)
+    body = packet.body
+    print(body)
+
+
+device.add_data_received_callback(data_receive_callback)
+remote = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string("13A20041CB89EE"))
+
+while True:
+    time.sleep(1)
+
+
+'''
 # Creating a database
-cursor.execute("CREATE TABLE data(id SERIAL_PRIMARY_KEY ,name Raw, name Read)")
-conn.commit()
-print("Database created successfully........")
+#cursor.execute("CREATE TABLE data(id SERIAL_PRIMARY_KEY ,name Raw, name Read)")
+#conn.commit()
+#print("Database created successfully........")
 
 # Closing the connection
 conn.close()
@@ -46,3 +68,4 @@ class RadioDriver():
       ##  id  SERIAL PRIMARY KEY;
    ## );
 
+'''
