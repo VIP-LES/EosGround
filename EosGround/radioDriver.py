@@ -42,7 +42,7 @@ def data_receive_callback(xbee_message):
         (%s,%s,%s,%s,%s,%s,%s,%s)
         """, (packet_type, packet_sender, packet_priority, packet_generate_time, packet_sequence_number, packet_timestamp, packet_body, time_arrived)
     )
-
+    conn.commit()
 
 
 device.add_data_received_callback(data_receive_callback)
