@@ -6,10 +6,11 @@ from EosLib.packet.packet import Packet
 
 import psycopg2
 import time
+import datetime
 
 PORT = "COM5"
 conn = psycopg2.connect(
-    database="postgres", user='postgres', password='password', host='localhost', port='5432'
+    database="db_1", user='postgres', password='password', host='localhost', port='5432'
 )
 conn.autocommit = True
 
@@ -20,12 +21,28 @@ device = XBeeDevice(PORT, 9600)
 device.open()
 
 def data_receive_callback(xbee_message):
+    #xbee_message.data.
     packet = Packet.decode(xbee_message.data)
-    body = packet.body.decode()
 
     packet_type = packet.data_header.data_type
+    packet_sender = packet.data_header.sender
+    packet_priority = packet.data_header.priority
+    packet_generate_time = packet.data_header.generate_time
+    packet_sequence_number = packet.transmit_header.send_seq_num
+    packet_timestamp = packet.transmit_header.send_time
+    packet_body = packet.body.decode()
+    #time_arrived = xbee_message.timestamp
+    time_arrived = datetime.datetime.now()
 
-    print(body.decode())
+    print(packet_body)
+
+    cursor.execute(
+        """
+        INSERT INTO receive_table (packet_type, packet_sender, packet_priority, packet_generate_time, packet_sequence_number, packet_timestamp, packet_body, time_arrived) VALUES 
+        (%s,%s,%s,%s,%s,%s,%s,%s)
+        """, (packet_type, packet_sender, packet_priority, packet_generate_time, packet_sequence_number, packet_timestamp, packet_body, time_arrived)
+    )
+
 
 
 device.add_data_received_callback(data_receive_callback)
