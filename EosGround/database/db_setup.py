@@ -10,7 +10,7 @@ cur = connection.cursor()
 cur.execute(
     """
     CREATE TABLE receive_table (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     packet_type INT NOT NULL,
     packet_sender INT NOT NULL,
     packet_priority INT NOT NULL,
@@ -26,7 +26,7 @@ cur.execute(
 cur.execute(
     """
     CREATE TABLE transmit_table (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     time_sent timestamp default NULL,
     packet_type INT NOT NULL,
     packet_sender INT NOT NULL,
