@@ -21,8 +21,11 @@ device.open()
 
 def data_receive_callback(xbee_message):
     packet = Packet.decode(xbee_message.data)
-    body = packet.body
-    print(body)
+    body = packet.body.decode()
+
+    packet_type = packet.data_header.data_type
+
+    print(body.decode())
 
 
 device.add_data_received_callback(data_receive_callback)
