@@ -19,6 +19,7 @@ def send_command():
     packet_sender = PacketDefinitions.Device.GROUND_STATION_1
     packet_type = PacketDefinitions.Type.DATA
     packet_priority = PacketDefinitions.Priority.DATA
+    packet_destination = PacketDefinitions.Device.RADIO
     packet_body = "Data"
 
     cursor.execute(

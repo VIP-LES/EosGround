@@ -10,17 +10,15 @@ import EosLib.packet.packet
 import EosLib.packet.transmit_header
 
 import psycopg2
+from config.config import config
 import datetime
 
-PORT = "COM5"
-conn = psycopg2.connect(
-    database="db_1", user='postgres', password='password', host='localhost', port='5432'
-)
+conn_params = config('database.ini')
+conn = psycopg2.connect(**conn_params)
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
-
-# Creating a cursor object using the cursor() method
 cursor = conn.cursor()
 
+PORT = "COM5"
 device = XBeeDevice(PORT, 9600)
 device.open()
 
@@ -67,7 +65,8 @@ def send_command():
     data_header.data_type = packet_type
     data_header.priority = packet_priority
     data_header.generate_time = packet_generate_time
-    data_header.destination = EosLib.packet.definitions.Device.RADIO
+
+    data_header.destination = EosLib.packet.definitions.Device.RADIO  # added externally
 
     transmit_header = EosLib.packet.transmit_header.TransmitHeader(packet_sequence_number)
     transmit_header.send_time = datetime.datetime.now()
