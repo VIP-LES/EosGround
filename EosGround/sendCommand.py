@@ -24,9 +24,9 @@ def send_command():
 
     cursor.execute(
         """
-        INSERT INTO transmit_table (time_sent, packet_type, packet_sender, packet_priority, packet_generate_time, packet_body) VALUES 
-        (%s,%s,%s,%s,%s,%s)
-        """, (time_sent, packet_type, packet_sender, packet_priority, packet_generate_time, packet_body)
+        INSERT INTO transmit_table (time_sent, packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body) VALUES 
+        (%s,%s,%s,%s,%s,%s,%s)
+        """, (time_sent, packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body)
     )
     conn.commit()
     
@@ -35,7 +35,7 @@ def send_notify():
     conn.commit()
 
 if __name__ == '__main__':
-    #send_command()
+    send_command()
     send_notify()
     cursor.close()
     conn.close()
