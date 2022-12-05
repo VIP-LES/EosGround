@@ -3,6 +3,7 @@ from digi.xbee.devices import RemoteXBeeDevice
 from digi.xbee.devices import XBee64BitAddress
 
 from EosLib.packet.packet import Packet
+import EosLib.packet.definitions as PacketDefinitions
 
 import psycopg2
 import time
@@ -44,10 +45,26 @@ def data_receive_callback(xbee_message):
     )
     conn.commit()
 
+def send_command():
+    time_sent = datetime.datetime.now()
+    packet_generate_time = datetime.datetime.now()
+    packet_sender = PacketDefinitions.Device.GROUND_STATION_1
+    packet_type = PacketDefinitions.Type.DATA
+    packet_priority = PacketDefinitions.Priority.DATA
+    packet_body = "Data"
+
+    cursor.execute(
+        """
+        INSERT INTO transmit_table (time_sent, packet_type, packet_sender, packet_priority, packet_generate_time, packet_body) VALUES 
+        (%s,%s,%s,%s,%s,%s)
+        """, (time_sent, packet_type, packet_sender, packet_priority, packet_generate_time, packet_body)
+    )
+    conn.commit()
 
 device.add_data_received_callback(data_receive_callback)
 remote = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string("13A20041CB89EE"))
 
+send_command()
 while True:
     time.sleep(1)
 
