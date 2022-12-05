@@ -28,3 +28,13 @@ def send_command():
         """, (time_sent, packet_type, packet_sender, packet_priority, packet_generate_time, packet_body)
     )
     conn.commit()
+    
+def send_notify():
+    cursor.execute("NOTIFY update;")
+    conn.commit()
+
+if __name__ == '__main__':
+    #send_command()
+    send_notify()
+    cursor.close()
+    conn.close()

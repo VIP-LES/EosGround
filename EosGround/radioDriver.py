@@ -1,19 +1,22 @@
+import time
+
 from digi.xbee.devices import XBeeDevice
 from digi.xbee.devices import RemoteXBeeDevice
 from digi.xbee.devices import XBee64BitAddress
 
 from EosLib.packet.packet import Packet
-import EosLib.packet.definitions as PacketDefinitions
+import EosLib.packet.definitions
+import EosLib.packet.packet
+import EosLib.packet.transmit_header
 
 import psycopg2
-import time
 import datetime
 
 PORT = "COM5"
 conn = psycopg2.connect(
     database="db_1", user='postgres', password='password', host='localhost', port='5432'
 )
-conn.autocommit = True
+conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 
 # Creating a cursor object using the cursor() method
 cursor = conn.cursor()
@@ -22,7 +25,6 @@ device = XBeeDevice(PORT, 9600)
 device.open()
 
 def data_receive_callback(xbee_message):
-    #xbee_message.data.
     packet = Packet.decode(xbee_message.data)
 
     packet_type = packet.data_header.data_type
@@ -46,28 +48,47 @@ def data_receive_callback(xbee_message):
     conn.commit()
 
 def send_command():
-    time_sent = datetime.datetime.now()
-    packet_generate_time = datetime.datetime.now()
-    packet_sender = PacketDefinitions.Device.GROUND_STATION_1
-    packet_type = PacketDefinitions.Type.DATA
-    packet_priority = PacketDefinitions.Priority.DATA
-    packet_body = "Data"
+    cursor.execute( """
+    SELECT * FROM "transmit_table"
+    ORDER BY "id" DESC
+    LIMIT 1;
+    """)
 
-    cursor.execute(
-        """
-        INSERT INTO transmit_table (time_sent, packet_type, packet_sender, packet_priority, packet_generate_time, packet_body) VALUES 
-        (%s,%s,%s,%s,%s,%s)
-        """, (time_sent, packet_type, packet_sender, packet_priority, packet_generate_time, packet_body)
-    )
-    conn.commit()
+    row = cursor.fetchall()[0]
+    print(row)
+    packet_type = row[2]
+    packet_sender = row[3]
+    packet_priority = row[4]
+    packet_generate_time = row[5]
+    packet_body = row[6]
+    packet_sequence_number = 100
+
+    data_header = EosLib.packet.packet.DataHeader(sender=packet_sender)
+    data_header.data_type = packet_type
+    data_header.priority = packet_priority
+    data_header.generate_time = packet_generate_time
+    data_header.destination = EosLib.packet.definitions.Device.RADIO
+
+    transmit_header = EosLib.packet.transmit_header.TransmitHeader(packet_sequence_number)
+    transmit_header.send_time = datetime.datetime.now()
+
+    packet = Packet(data_header=data_header, body=packet_body.encode())
+    packet.transmit_header = transmit_header
+
+    device.send_data_async(remote, packet.encode())
 
 device.add_data_received_callback(data_receive_callback)
-remote = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string("13A20041CB89EE"))
+#remote = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string("13A20041CB89EE"))
+remote = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string("FFFF"))
 
-send_command()
+cursor.execute("LISTEN update;")
 while True:
-    time.sleep(1)
-
+    conn.poll()
+    for notify in conn.notifies:
+        print("sending command")
+        send_command()
+        conn.notifies.clear()
+    time.sleep(0.01)
 
 '''
 # Creating a database
@@ -105,4 +126,21 @@ class RadioDriver():
       ##  id  SERIAL PRIMARY KEY;
    ## );
 
+'''
+'''
+def send_command():
+    time_sent = datetime.datetime.now()
+    packet_generate_time = datetime.datetime.now()
+    packet_sender = PacketDefinitions.Device.GROUND_STATION_1
+    packet_type = PacketDefinitions.Type.DATA
+    packet_priority = PacketDefinitions.Priority.DATA
+    packet_body = "Data"
+
+    cursor.execute(
+        """
+        INSERT INTO transmit_table (time_sent, packet_type, packet_sender, packet_priority, packet_generate_time, packet_body) VALUES 
+        (%s,%s,%s,%s,%s,%s)
+        """, (time_sent, packet_type, packet_sender, packet_priority, packet_generate_time, packet_body)
+    )
+    conn.commit()
 '''
