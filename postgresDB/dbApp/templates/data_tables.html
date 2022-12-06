@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+
+{% regroup raw_data by packet_sender as devicelist %}
+{{ devicelist }}
+
+{% for device in devicelist %}
+<h2> Device : {{ device.grouper }}</h2>
+<table>
+    <tr>
+        <th> Time sent </th>
+        <th> Packet type </th>
+        <th> Packet Priority </th>
+        <th> Packet body </th>
+    </tr>
+    {% for devicedata in device.list %}
+        <tr>
+            <td> {{ devicedata.time_sent }} </td>
+            <td> {{ devicedata.packet_type }} </td>
+            <td> {{ devicedata.packet_priority }} </td>
+            <td> {{ devicedata.packet_body }} </td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endfor %}
+
+</body>
+</html>
+
+

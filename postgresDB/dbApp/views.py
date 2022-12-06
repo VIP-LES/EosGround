@@ -4,14 +4,25 @@ from django.shortcuts import render
 from dbApp.models import RawData
 from django.views import View
 
-class DataTable(View):
-    def get_data(self, request):
-        allData = RawData.objects.all()
-        for data in allData:
-            print(data.packet_type)
-            print(data.priority)
-            print(data.device)
-            print(data.body)
-            print()
+""" def get_all_devices(request):
+    #get list of all devices
+    all_dev_list = list(RawData.objects.values('packet_sender'))
+    context = {
+        "dev_list": all_dev_list,
+    }
+    #return render(request, "data_tables.html", context)
+    #uncomment when data_tables html is done  """
 
-        return render(request, 'rawdata.html')
+def device_info(request):
+    #get info from specific device - pass in device #
+    #all_dev_list = list(RawData.objects.values('packet_sender'))
+    #device_info = RawData.objects.get(pk=pk)
+
+    raw_data = RawData.objects.order_by('packet_sender')
+
+    context = {
+        #"dev_list": all_dev_list,
+        #"dev_info": device_info
+        "raw_data": raw_data,
+    }
+    return render(request, "data_tables.html", context)
