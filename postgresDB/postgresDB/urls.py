@@ -19,5 +19,5 @@ from dbApp import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # path("data/", views.get_data),
+    path("data/", views.device_info),
 ]
