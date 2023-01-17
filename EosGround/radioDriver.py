@@ -22,7 +22,7 @@ conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets
 cursor = conn.cursor()  # creates cursor
 
 # sets up digi
-PORT = "COM5"
+PORT = "COM12"
 device = XBeeDevice(PORT, 9600)
 device.open()
 
@@ -37,7 +37,7 @@ def data_receive_callback(xbee_message):
     packet_generate_time = packet.data_header.generate_time
     packet_sequence_number = packet.transmit_header.send_seq_num
     packet_timestamp = packet.transmit_header.send_time
-    packet_body = packet.body.decode()
+    packet_body = packet.body
     time_arrived = datetime.datetime.now()
 
     print(packet_body)
@@ -50,7 +50,6 @@ def data_receive_callback(xbee_message):
         packet_type, packet_sender, packet_priority, packet_generate_time, packet_sequence_number, packet_timestamp,
         packet_body, time_arrived)
     )
-    conn.commit()
 
 
 #  function called anytime new data is put into database
@@ -62,8 +61,9 @@ def send_command():
     LIMIT 1;
     """)
 
-    row = cursor.fetchall()[0] # gets last row in table
-    print(row)
+    for row in cursor:
+        print(row)
+    packet_id = row[0]
     packet_type = row[2]
     packet_sender = row[3]
     packet_priority = row[4]
@@ -88,6 +88,14 @@ def send_command():
 
     device.send_data_async(remote, packet.encode())
     sequence_number += 1
+    time_sent = datetime.datetime.now()
+
+    cursor.execute(
+        """
+        UPDATE transmit_table 
+        SET time_sent = (%s)
+        WHERE id = (%s)
+        """, (time_sent, packet_id))
 
 
 device.add_data_received_callback(data_receive_callback)  # add data receive callback

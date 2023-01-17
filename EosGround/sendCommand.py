@@ -1,16 +1,15 @@
 
 from EosLib.packet.packet import Packet
 import EosLib.packet.definitions as PacketDefinitions
+from config.config import config
 
 import psycopg2
 import datetime
 
-conn = psycopg2.connect(
-    database="db_1", user='postgres', password='password', host='localhost', port='5432'
-)
-
-# Creating a cursor object using the cursor() method
-cursor = conn.cursor()
+conn_params = config('database.ini')  # gets config params
+conn = psycopg2.connect(**conn_params)  # gets connection object
+conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit
+cursor = conn.cursor()  # creates cursor
 
 
 def send_command():
@@ -19,8 +18,8 @@ def send_command():
     packet_sender = PacketDefinitions.Device.GROUND_STATION_1
     packet_type = PacketDefinitions.Type.DATA
     packet_priority = PacketDefinitions.Priority.DATA
-    packet_destination = PacketDefinitions.Device.RADIO
-    packet_body = "Data"
+    packet_destination = PacketDefinitions.Device.MISC_RADIO_1
+    packet_body = "PING 420"
 
     cursor.execute(
         """

@@ -17,12 +17,13 @@ try:
         packet_generate_time timestamp NOT NULL,
         packet_sequence_number INT NOT NULL,
         packet_timestamp timestamp NOT NULL,
-        packet_body VARCHAR(255) NOT NULL,
+        packet_body bytea NOT NULL,
+        packet_destination INT,
         time_arrived timestamp NOT NULL
         )
         """
     )
-except:
+except psycopg2.errors.DuplicateTable:
     print("RX table exists")
 
 try:
@@ -40,5 +41,5 @@ try:
         )
         """
     )
-except:
+except psycopg2.errors.DuplicateTable:
     print("TX table exists")
