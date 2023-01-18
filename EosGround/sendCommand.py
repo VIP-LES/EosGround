@@ -13,7 +13,6 @@ cursor = conn.cursor()  # creates cursor
 
 
 def send_command():
-    time_sent = datetime.datetime.now()
     packet_generate_time = datetime.datetime.now()
     packet_sender = PacketDefinitions.Device.GROUND_STATION_1
     packet_type = PacketDefinitions.Type.DATA
@@ -23,9 +22,9 @@ def send_command():
 
     cursor.execute(
         """
-        INSERT INTO transmit_table (time_sent, packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body) VALUES 
-        (%s,%s,%s,%s,%s,%s,%s)
-        """, (time_sent, packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body)
+        INSERT INTO transmit_table (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body) VALUES 
+        (%s,%s,%s,%s,%s,%s)
+        """, (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body)
     )
     conn.commit()
     

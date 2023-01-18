@@ -57,7 +57,7 @@ def data_receive_callback(xbee_message):
 def send_command():
     global sequence_number
     cursor.execute("""
-    SELECT * FROM "transmit_table"
+    SELECT * FROM "transmit_table" WHERE time_sent is NULL
     ORDER BY "id" DESC
     LIMIT 1;
     """)
