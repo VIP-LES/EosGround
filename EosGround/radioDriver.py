@@ -61,8 +61,7 @@ def send_command():
     LIMIT 1;
     """)
 
-    for row in cursor:
-        print(row)
+    row = cursor.fetchall()[0]
     packet_id = row[0]
     packet_type = row[2]
     packet_sender = row[3]
