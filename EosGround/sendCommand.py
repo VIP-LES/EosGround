@@ -1,6 +1,5 @@
 
-from EosLib.packet.packet import Packet
-import EosLib.packet.definitions as PacketDefinitions
+from EosLib.packet.definitions import Device, Priority, Type
 from config.config import config
 
 import psycopg2
@@ -14,10 +13,10 @@ cursor = conn.cursor()  # creates cursor
 
 def send_command():
     packet_generate_time = datetime.datetime.now()
-    packet_sender = PacketDefinitions.Device.GROUND_STATION_1
-    packet_type = PacketDefinitions.Type.DATA
-    packet_priority = PacketDefinitions.Priority.DATA
-    packet_destination = PacketDefinitions.Device.MISC_RADIO_1
+    packet_sender = Device.GROUND_STATION_1
+    packet_type = Type.DATA
+    packet_priority = Priority.DATA
+    packet_destination = Device.MISC_RADIO_1
     packet_body = "PING 422"
 
     cursor.execute(
