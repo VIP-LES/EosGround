@@ -18,7 +18,7 @@ def send_command():
     packet_type = PacketDefinitions.Type.DATA
     packet_priority = PacketDefinitions.Priority.DATA
     packet_destination = PacketDefinitions.Device.MISC_RADIO_1
-    packet_body = "PING 420"
+    packet_body = "PING 422"
 
     cursor.execute(
         """
