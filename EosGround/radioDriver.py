@@ -29,7 +29,11 @@ device.open()
 
 # function called when data is received
 def data_receive_callback(xbee_message):
-    packet = Packet.decode(xbee_message.data)
+    try:
+        packet = Packet.decode(xbee_message.data)
+    except EosLib.packet.exceptions.PacketFormatError:
+        print("packet could not be decoded.")
+        return
 
     packet_type = packet.data_header.data_type
     packet_sender = packet.data_header.sender
@@ -43,14 +47,17 @@ def data_receive_callback(xbee_message):
 
     print(packet_body)
 
-    cursor.execute(
-        """
-        INSERT INTO receive_table (packet_type, packet_sender, packet_priority, packet_generate_time, packet_sequence_number, packet_timestamp, packet_body, packet_destination, time_arrived) VALUES 
-        (%s,%s,%s,%s,%s,%s,%s,%s,%s)
-        """, (
-        packet_type, packet_sender, packet_priority, packet_generate_time, packet_sequence_number, packet_timestamp,
-        packet_body, packet_destination, time_arrived)
-    )
+    try:
+        cursor.execute(
+            """
+            INSERT INTO receive_table (packet_type, packet_sender, packet_priority, packet_generate_time, packet_sequence_number, packet_timestamp, packet_body, packet_destination, time_arrived) VALUES 
+            (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            """, (
+                packet_type, packet_sender, packet_priority, packet_generate_time, packet_sequence_number, packet_timestamp,
+                packet_body, packet_destination, time_arrived)
+        )
+    except psycopg2.OperationalError:
+        print("Error inserting into database")
 
 
 #  function called anytime new data is put into database
