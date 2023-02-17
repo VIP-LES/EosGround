@@ -1,4 +1,4 @@
-git+https://github.com/VIP-LES/EosLib@v0.4.1#egg=EosLib
+git+https://github.com/VIP-LES/EosLib@v1.0.0#egg=EosLib
 attrs==22.1.0
 colorama==0.4.5
 iniconfig==1.1.1
@@ -8,5 +8,5 @@ pyparsing==3.0.9
 pytest==7.2.1
 tomli==2.0.1
 digi-xbee==1.4.1
-psycopg2==2.9.5
+psycopg2-binary==2.9.5
 pyserial==3.5
