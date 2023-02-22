@@ -1,0 +1,23 @@
+{
+  "name": "openmct-tutorials",
+  "version": "0.0.1",
+  "description": "Ground Station Open MCT",
+  "main": "server.js",
+  "scripts": {
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nasa/openmct-tutorial.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nasa/openmct-tutorial/issues"
+  },
+  "homepage": "https://github.com/nasa/openmct-tutorial#readme",
+  "dependencies": {
+    "openmct": "latest",
+    "http-server": "latest"
+  }
+}
