@@ -1,0 +1,21 @@
+{
+  "version": "0.0.1",
+  "main": "server.js",
+  "scripts": {
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nasa/openmct-tutorial.git"
+  },
+  "author": "",
+  "license": "MIT License",
+  "bugs": {
+    "url": "https://github.com/nasa/openmct-tutorial/issues"
+  },
+  "homepage": "https://github.com/nasa/openmct-tutorial#readme",
+  "dependencies": {
+    "openmct": "latest",
+    "http-server": "latest"
+  }
+}
