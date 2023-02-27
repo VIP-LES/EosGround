@@ -1,7 +1,9 @@
+import os
 import psycopg2
-from config.config import config
 
-conn_params = config('database.ini')
+from config.config import get_config
+
+conn_params = get_config(os.path.join('config', 'database.ini'))
 connection = psycopg2.connect(**conn_params)
 connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
 cur = connection.cursor()

@@ -1,12 +1,10 @@
 from configparser import ConfigParser
 
-def config(config_db):
+
+def get_config(config_file_path: str) -> dict:
     section = 'postgresql'
-    #config_file_path = 'EosGround/EosGround/database/config/' + config_db
-    config_file_path = 'config/' + config_db
     config_parser = ConfigParser()
     config_parser.read(config_file_path)
-    #config_parser.read(config_db)
     config_params = config_parser.items(section)
 
     db_conn_dict = {}

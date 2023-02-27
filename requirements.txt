@@ -10,3 +10,4 @@ tomli==2.0.1
 digi-xbee==1.4.1
 psycopg2==2.9.5
 pyserial==3.5
+SQLAlchemy==2.0.4
