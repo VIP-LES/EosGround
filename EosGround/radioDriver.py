@@ -32,7 +32,7 @@ def data_receive_callback(xbee_message):
     try:
         cursor.execute(
             """
-            INSERT INTO received_data (raw_bytes, rssi, processed) VALUES 
+            INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed) VALUES 
             (%s,%s,%s)
             """, (xbee_message.data, device.get_parameter("DB"), False)
         )
@@ -44,7 +44,7 @@ def data_receive_callback(xbee_message):
 def send_command():
     global sequence_number
     cursor.execute("""
-    SELECT * FROM "transmit_table" WHERE time_sent is NULL
+    SELECT * FROM eos_schema.transmit_table WHERE time_sent is NULL
     ORDER BY "id" DESC
     """)
 
@@ -80,7 +80,7 @@ def send_command():
 
         cursor.execute(
             """
-            UPDATE transmit_table 
+            UPDATE eos_schema.transmit_table 
             SET time_sent = (%s)
             WHERE id = (%s)
             """, (time_sent, packet_id))
