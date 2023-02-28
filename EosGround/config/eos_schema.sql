@@ -16,23 +16,23 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS eos_schema.received_data
 (
-    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
     raw_bytes bytea NOT NULL,
-    rssi smallint NOT NULL,
+    rssi int NOT NULL,
     processed boolean NOT NULL,
     CONSTRAINT received_data_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS eos_schema.received_packets
 (
-    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
-    data_id bigint NOT NULL,
-    type smallint NOT NULL,
-    sender smallint NOT NULL,
-    priority smallint NOT NULL,
-    destination smallint NOT NULL,
+    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+    data_id int NOT NULL,
+    type int NOT NULL,
+    sender int NOT NULL,
+    priority int NOT NULL,
+    destination int NOT NULL,
     generate_time timestamp without time zone NOT NULL,
-    sequence_number smallint NOT NULL,
+    sequence_number int NOT NULL,
     send_time timestamp without time zone NOT NULL,
     received_time timestamp without time zone NOT NULL,
     packet_body bytea NOT NULL,
@@ -42,20 +42,20 @@ CREATE TABLE IF NOT EXISTS eos_schema.received_packets
 
 CREATE TABLE IF NOT EXISTS eos_schema.temperature
 (
-    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
-    packet_id bigserial NOT NULL,
+    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+    packet_id int NOT NULL,
     temperature real NOT NULL,
     CONSTRAINT temperature_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS eos_schema.transmit_table
 (
-    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
     time_sent timestamp without time zone,
-    type smallint NOT NULL,
-    sender smallint NOT NULL,
-    priority smallint NOT NULL,
-    destination smallint NOT NULL,
+    type int NOT NULL,
+    sender int NOT NULL,
+    priority int NOT NULL,
+    destination int NOT NULL,
     generate_time timestamp without time zone NOT NULL,
     body character varying(255) NOT NULL,
     PRIMARY KEY (id)
@@ -63,14 +63,13 @@ CREATE TABLE IF NOT EXISTS eos_schema.transmit_table
 
 CREATE TABLE IF NOT EXISTS eos_schema.test_data
 (
-    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
-    packet_id bigserial NOT NULL,
-    random_int bigint,
+    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+    packet_id serial NOT NULL,
+    random_int int,
     PRIMARY KEY (id)
 );
 
 ALTER TABLE IF EXISTS eos_schema.received_packets
-
     ADD CONSTRAINT received_packets_to_received_data FOREIGN KEY (data_id)
     REFERENCES eos_schema.received_data (id) MATCH SIMPLE
     ON UPDATE NO ACTION
