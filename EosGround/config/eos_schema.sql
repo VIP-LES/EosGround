@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS eos_schema.received_data
     id int NOT NULL GENERATED ALWAYS AS IDENTITY,
     raw_bytes bytea NOT NULL,
     rssi int NOT NULL,
-    processed boolean NOT NULL,
+    processed boolean NOT NULL DEFAULT FALSE,
     CONSTRAINT received_data_pkey PRIMARY KEY (id)
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS eos_schema.received_packets
 (
     id int NOT NULL GENERATED ALWAYS AS IDENTITY,
     data_id int NOT NULL,
-    type int NOT NULL,
+    packet_type int NOT NULL,
     sender int NOT NULL,
     priority int NOT NULL,
     destination int NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS eos_schema.received_packets
     send_time timestamp without time zone NOT NULL,
     received_time timestamp without time zone NOT NULL,
     packet_body bytea NOT NULL,
-    processed boolean NOT NULL,
+    processed boolean NOT NULL DEFAULT FALSE,
     CONSTRAINT received_packets_pkey PRIMARY KEY (id)
 );
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS eos_schema.transmit_table
 (
     id int NOT NULL GENERATED ALWAYS AS IDENTITY,
     time_sent timestamp without time zone,
-    type int NOT NULL,
+    packet_type int NOT NULL,
     sender int NOT NULL,
     priority int NOT NULL,
     destination int NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS eos_schema.transmit_table
 CREATE TABLE IF NOT EXISTS eos_schema.test_data
 (
     id int NOT NULL GENERATED ALWAYS AS IDENTITY,
-    packet_id serial NOT NULL,
+    packet_id int NOT NULL,
     random_int int,
     PRIMARY KEY (id)
 );
