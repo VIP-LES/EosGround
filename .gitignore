@@ -2,4 +2,3 @@
 __pycache__/
 .DS_Store
 env/
-EosGround/config/database.ini
