@@ -34,7 +34,7 @@ def data_receive_callback(xbee_message):
             """
             INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed) VALUES 
             (%s,%s,%s)
-            """, (xbee_message.data, device.get_parameter("DB"), False)
+            """, (xbee_message.data, 0, False)
         )
     except psycopg2.OperationalError:
         print("Error inserting into database")
