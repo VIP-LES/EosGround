@@ -4,14 +4,15 @@ from config.config import config
 
 def configure_db():
     conn_params = config('database.ini')
+    conn_params.pop("database")
     connection = psycopg2.connect(**conn_params)
     connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cur = connection.cursor()
     with open("config/create_database.sql") as f:
         cur.execute(f.read())
-
     connection.close()
-    conn_params['database'] = "eos_db"
+
+    conn_params = config('database.ini')
     connection = psycopg2.connect(**conn_params)
     connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cur = connection.cursor()
