@@ -1,15 +1,17 @@
 import psycopg2
+from psycopg2 import sql
 from config.config import config
 
 
 def configure_db():
     conn_params = config('database.ini')
-    conn_params.pop("database")
+    db_name = conn_params.pop("database")
     connection = psycopg2.connect(**conn_params)
     connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     cur = connection.cursor()
     with open("config/create_database.sql") as f:
-        cur.execute(f.read())
+        statement = f.read().replace("placeholder_name", db_name)
+        cur.execute(statement)
     connection.close()
 
     conn_params = config('database.ini')
