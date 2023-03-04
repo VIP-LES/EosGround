@@ -1,0 +1,1 @@
+SCHEMA = 'test_schema'

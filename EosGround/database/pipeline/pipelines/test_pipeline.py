@@ -2,8 +2,20 @@ from collections import namedtuple
 from sqlalchemy.orm import Query, Session
 
 from EosGround.database.pipeline.lib.pipeline_base import PipelineBase
-from EosGround.database.models.test1 import Test1
-from EosGround.database.models.test2 import Test2
+from EosGround.database.models.test.test1 import Test1
+from EosGround.database.models.test.test2 import Test2
+
+
+# Test SQL (run from pgAdmin after starting pipeline):
+#
+# BEGIN;
+#
+# INSERT INTO test_schema.test1 (random_number)
+# VALUES (1), (2), (3);
+#
+# NOTIFY test_start;
+#
+# COMMIT;
 
 
 class TestPipeline(PipelineBase):
