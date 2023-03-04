@@ -37,5 +37,6 @@ def configure_db():
 
 if __name__ == "__main__":
     print("WARNING: make sure working directory is the repository root")
-    print("WARNING: make sure you have dropped the database in pgAdmin before running this script")
+    print("WARNING: if this isn't first-time setup, make sure you have dropped the database in pgAdmin"
+          " before running this script.  Btw doing that will erase everything in the database")
     conn = configure_db()
