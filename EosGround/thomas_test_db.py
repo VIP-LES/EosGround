@@ -1,31 +1,22 @@
-import datetime
-import os
-import psycopg2
 import time
-
-from digi.xbee.devices import XBeeDevice
-from digi.xbee.devices import RemoteXBeeDevice
-from digi.xbee.devices import XBee64BitAddress
 
 from EosLib.packet.packet import Packet
 import EosLib.packet.definitions
 import EosLib.packet.packet
 import EosLib.packet.transmit_header
+import EosLib.packet.data_header
 
-from config.config import get_config
+import psycopg2
+from config.config import config
+import datetime
 
 global sequence_number
 sequence_number = 0
 
-conn_params = get_config(os.path.join('config', 'database.ini'))  # gets config params
+conn_params = config('database.ini')  # gets config params
 conn = psycopg2.connect(**conn_params)  # gets connection object
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit
 cursor = conn.cursor()  # creates cursor
-
-# sets up digi
-PORT = "COM12"
-device = XBeeDevice(PORT, 9600)
-device.open()
 
 
 # function called when data is received
@@ -45,7 +36,7 @@ def data_receive_callback(xbee_message):
 def send_command():
     global sequence_number
     cursor.execute("""
-    SELECT * FROM eos_schema.transmit_table WHERE time_sent is NULL
+    SELECT * FROM eos_db.eos_schema.transmit_table WHERE time_sent is NULL
     ORDER BY "id" DESC
     """)
 
@@ -75,7 +66,7 @@ def send_command():
         packet = Packet(data_header=data_header, body=packet_body.encode())  # transmit packet
         packet.transmit_header = transmit_header
 
-        device.send_data_async(remote, packet.encode())
+        #device.send_data_async(remote, packet.encode())
         sequence_number += 1
         time_sent = datetime.datetime.now()
 
@@ -87,14 +78,25 @@ def send_command():
             """, (time_sent, packet_id))
 
 
-device.add_data_received_callback(data_receive_callback)  # add data receive callback
-remote = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string("FFFF"))  # add digi remote device
+#device.add_data_received_callback(data_receive_callback)  # add data receive callback
+#remote = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string("FFFF"))  # add digi remote device
 
 cursor.execute("LISTEN update;")  # adds listen
-while True:
-    conn.poll()
-    if len(conn.notifies) > 0:
-        print("sending command")
-        send_command()
-        conn.notifies.clear()
-    time.sleep(0.01)
+#while True:
+#    conn.poll()
+#    if len(conn.notifies) > 0:
+#        print("sending command")
+#        send_command()
+#        conn.notifies.clear()
+#    time.sleep(0.01)
+
+class MessageWrapper:
+    def __init__(self, data):
+        self.data = data
+
+if __name__ == "__main__":
+    data_header = EosLib.packet.data_header.DataHeader(EosLib.Device.O3)
+    transmit_header = EosLib.packet.transmit_header.TransmitHeader(2)
+    packet = Packet(b"Hello", data_header, transmit_header)
+    wrapper = MessageWrapper(packet.encode())
+    data_receive_callback(wrapper)
