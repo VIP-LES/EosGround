@@ -75,7 +75,7 @@ class PipelineBase(ABC):
 
         notify_channel = self.get_notify_channel()
         if notify_channel is not None:
-            self.db.execute(text(f"NOTIFY f{notify_channel};"))
+            self.db.execute(text(f"NOTIFY {notify_channel};"))
             self.db.commit()
 
     def run(self) -> None:
@@ -89,10 +89,12 @@ class PipelineBase(ABC):
                 self.db.connection.notifies.pop()
                 session = sessionmaker(bind=self.db_engine)()
                 try:
+                    start_count = self.record_count
                     for record in self.extract(session):
                         self.transform(session, record)
                         self.record_count += 1
                     self.load(session)
+                    print(f"successfully processed {self.record_count - start_count} records")
                 except Exception as e:
                     print(f"error occurred while processing record #{self.record_count}, rolling back:"
                           f" {e}\n{traceback.format_exc()}")

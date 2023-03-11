@@ -36,6 +36,6 @@ class TestPipeline(PipelineBase):
         # update the row from table test1 to set processed=True
         record.processed = True
         # insert a new row into table test2
-        insert_row = Test2(random_number=record.random_number)
+        transformed_random_number = 42 + record.random_number
+        insert_row = Test2(random_number=transformed_random_number, test1_id=record.id)
         session.add(insert_row)
-

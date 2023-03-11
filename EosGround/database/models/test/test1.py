@@ -1,12 +1,14 @@
-from sqlalchemy import BigInteger, Boolean, Column, Identity, Integer
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import BigInteger, Identity
+from sqlalchemy.orm import Mapped, mapped_column
 
+from EosGround.database.models import TableBase
 from EosGround.database.models.test import SCHEMA
 
 
-class Test1(declarative_base()):
+class Test1(TableBase):
     __tablename__ = 'test1'
     __table_args__ = {'schema': SCHEMA}
-    id = Column(BigInteger, Identity(start=1), nullable=False, primary_key=True)
-    random_number = Column(Integer, nullable=True)
-    processed = Column(Boolean, nullable=False)
+
+    id: Mapped[int] = mapped_column(BigInteger, Identity(start=1), primary_key=True, init=False)
+    random_number: Mapped[int | None]
+    processed: Mapped[bool] = mapped_column(default=False)
