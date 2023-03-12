@@ -1,3 +1,6 @@
+import datetime
+import os
+import psycopg2
 import time
 
 from digi.xbee.devices import XBeeDevice
@@ -9,14 +12,12 @@ import EosLib.packet.definitions
 import EosLib.packet.packet
 import EosLib.packet.transmit_header
 
-import psycopg2
-from config.config import config
-import datetime
+from config.config import get_config
 
 global sequence_number
 sequence_number = 0
 
-conn_params = config('database.ini')  # gets config params
+conn_params = get_config(os.path.join('config', 'database.ini'))  # gets config params
 conn = psycopg2.connect(**conn_params)  # gets connection object
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit
 cursor = conn.cursor()  # creates cursor
