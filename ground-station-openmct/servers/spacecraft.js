@@ -15,36 +15,72 @@ function Spacecraft() {
     }, this);
 
     setInterval(function () {
-        this.updateState();
-        this.generateTelemetry();
-    }.bind(this), 1000);
+              this.pull();
+      this.updateState();
+      this.generateTelemetry();
+    }.bind(this),
+    1000
+  );
 
-    console.log("Example spacecraft launched!");
-    console.log("Press Enter to toggle thruster state.");
+  console.log("Example spacecraft launched!");
+  console.log("Press Enter to toggle thruster state.");
 
-    process.stdin.on('data', function () {
-        this.state['prop.thrusters'] =
-            (this.state['prop.thrusters'] === "OFF") ? "ON" : "OFF";
-        this.state['comms.recd'] += 32;
-        console.log("Thrusters " + this.state["prop.thrusters"]);
-        this.generateTelemetry();
-    }.bind(this));
+  process.stdin.on(
+    "data",
+    function () {
+      this.state["prop.thrusters"] =
+        this.state["prop.thrusters"] === "OFF" ? "ON" : "OFF";
+      this.state["comms.recd"] += 32;
+      console.log("Thrusters " + this.state["prop.thrusters"]);
+      this.generateTelemetry();
+    }.bind(this)
+  );
+}
+
+Spacecraft.prototype.pull = function () {
+  const http = require("http");
+
+  const options = {
+    hostname: "127.0.0.1",
+    port: 8000,
+    path: "/data",
+    method: "GET",
+  };
+
+  const req = http.request(options, (res) => {
+    let data = "";
+
+    res.on("data", (chunk) => {
+      data += chunk;
+    });
+
+    res.on("end", () => {
+      // Parse the data into a JavaScript object or other data type
+      const parsedData = JSON.parse(data);
+
+      // Do something with the parsed data
+      pos = parsedData.pos;
+      vel = parsedData.vel;
+      acc = parsedData.acceleration;
+    });
+  });
+
+  req.on("error", (error) => {
+    console.error(error);
+  });
+
+  req.end();
 };
 
 Spacecraft.prototype.updateState = function () {
-    this.state["prop.fuel"] = Math.max(
-        0,
-        this.state["prop.fuel"] -
-            (this.state["prop.thrusters"] === "ON" ? 0.5 : 0)
-    );
-    this.state["pwr.temp"] = this.state["pwr.temp"] * 0.985
-        + Math.random() * 0.25 + Math.sin(Date.now());
-    if (this.state["prop.thrusters"] === "ON") {
-        this.state["pwr.c"] = 8.15;
-    } else {
-        this.state["pwr.c"] = this.state["pwr.c"] * 0.985;
-    }
-    this.state["pwr.v"] = 30 + Math.pow(Math.random(), 3);
+  this.state["prop.fuel"] = pos;
+  this.state["pwr.temp"] = vel;
+  this.state["pwr.v"] = acc;
+  if (this.state["prop.thrusters"] === "ON") {
+    this.state["pwr.c"] = 8.15;
+  } else {
+    this.state["pwr.c"] = this.state["pwr.c"] * 0.985;
+  }
 };
 
 /**
