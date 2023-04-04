@@ -13,6 +13,7 @@ import EosLib.packet.packet
 import EosLib.packet.transmit_header
 
 from config.config import get_config
+from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 
 global sequence_number
 sequence_number = 0
@@ -37,8 +38,11 @@ def data_receive_callback(xbee_message):
             (%s,%s,%s)
             """, (xbee_message.data, 0, False)
         )
+        cursor.execute(f"NOTIFY {PacketPipeline.get_listen_channel()}")
+
     except psycopg2.OperationalError:
         print("Error inserting into database")
+
 
 
 #  function called anytime new data is put into database

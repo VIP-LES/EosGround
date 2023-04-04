@@ -5,15 +5,23 @@ import EosLib.packet.definitions
 import EosLib.packet.packet
 import EosLib.packet.transmit_header
 import EosLib.packet.data_header
+from EosLib.device import Device
 
 import psycopg2
-from config.config import config
-import datetime
+from config.config import get_config
+from datetime import datetime
+
+from EosLib.packet.definitions import Type
+
+from EosLib.format.telemetry_data import TelemetryData
+from EosLib.format.position import Position, FlightState
+
 
 global sequence_number
 sequence_number = 0
 
-conn_params = config('database.ini')  # gets config params
+
+conn_params = get_config('/Users/aryan_battula/VIP-LES/EosGround/EosGround/config/database.ini')  # gets config params
 conn = psycopg2.connect(**conn_params)  # gets connection object
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit
 cursor = conn.cursor()  # creates cursor
@@ -28,6 +36,10 @@ def data_receive_callback(xbee_message):
             (%s,%s,%s)
             """, (xbee_message.data, 0, False)
         )
+        print(xbee_message.data)
+        for i in range(len(xbee_message.data)):
+            print(xbee_message.data[i])
+        # print(xbee_message.data)
     except psycopg2.OperationalError:
         print("Error inserting into database")
 
@@ -94,9 +106,16 @@ class MessageWrapper:
     def __init__(self, data):
         self.data = data
 
+
 if __name__ == "__main__":
-    data_header = EosLib.packet.data_header.DataHeader(EosLib.Device.O3)
+    data_header = EosLib.packet.data_header.DataHeader(Device.O3, Type.POSITION)
     transmit_header = EosLib.packet.transmit_header.TransmitHeader(2)
-    packet = Packet(b"Hello", data_header, transmit_header)
+
+    current_time = datetime.now()
+    new_data = Position()
+
+    encoded_new_data = new_data.encode_position(current_time.timestamp(), 23.4, 23.4, 23.4, 23.4, 5, FlightState.NOT_SET)
+
+    packet = Packet(encoded_new_data, data_header, transmit_header)
     wrapper = MessageWrapper(packet.encode())
     data_receive_callback(wrapper)
