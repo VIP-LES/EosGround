@@ -15,6 +15,7 @@ from EosLib.packet.definitions import Type
 
 from EosLib.format.telemetry_data import TelemetryData
 from EosLib.format.position import Position, FlightState
+from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 
 
 global sequence_number
@@ -36,6 +37,7 @@ def data_receive_callback(xbee_message):
             (%s,%s,%s)
             """, (xbee_message.data, 0, False)
         )
+        cursor.execute(f"NOTIFY {PacketPipeline.get_listen_channel()}")
         print(xbee_message.data)
         for i in range(len(xbee_message.data)):
             print(xbee_message.data[i])

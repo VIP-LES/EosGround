@@ -35,7 +35,7 @@ class TelemetryPipeline(PipelineBase):
 
     def extract(self, session: Session) -> Query:
         # to do: figure out enum for telemetry
-        return session.query(ReceivedPackets).filter_by(packet_type=Type.TELEMETRY_DATA)
+        return session.query(ReceivedPackets).filter_by(packet_type=Type.TELEMETRY_DATA, processed=False)
 
     def transform(self, session: Session, record: namedtuple):
         print(f"transforming telemetry_pipeline row id={record.id}")
