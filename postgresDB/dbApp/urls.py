@@ -3,5 +3,5 @@ from .views import TestDataList
 
 
 urlpatterns = [
-    path('', TestDataList.as_view()),
+    path('<int:pk>/', TestDataList.as_view(), name='retrieve-data'),
 ]

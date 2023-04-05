@@ -5,4 +5,4 @@ from .models import TestData
 class TestDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestData
-        fields = ['packet', 'random_int']
+        fields = ['pk', 'packet', 'random_int']

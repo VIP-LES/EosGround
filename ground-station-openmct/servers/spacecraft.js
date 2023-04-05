@@ -1,12 +1,14 @@
+let temp = 0;
+let pressure = 0;
+let humidity = 0;
+
 function Spacecraft() {
     this.state = {
-        "prop.fuel": 77,
-        "prop.thrusters": "OFF",
+        "prop.temp": 77,
+        "prop.pressure": 10,
+        "prop.humidity": 23,
         "comms.recd": 0,
-        "comms.sent": 0,
-        "pwr.temp": 245,
-        "pwr.c": 8.15,
-        "pwr.v": 30
+        "comms.sent": 0
     };
     this.history = {};
     this.listeners = [];
@@ -22,65 +24,28 @@ function Spacecraft() {
     1000
   );
 
-  console.log("Example spacecraft launched!");
-  console.log("Press Enter to toggle thruster state.");
-
-  process.stdin.on(
-    "data",
-    function () {
-      this.state["prop.thrusters"] =
-        this.state["prop.thrusters"] === "OFF" ? "ON" : "OFF";
-      this.state["comms.recd"] += 32;
-      console.log("Thrusters " + this.state["prop.thrusters"]);
-      this.generateTelemetry();
-    }.bind(this)
-  );
+  console.log("Graphs booting up!");
 }
 
 Spacecraft.prototype.pull = function () {
-  const http = require("http");
-
-  const options = {
-    hostname: "127.0.0.1",
-    port: 8000,
-    path: "/data",
-    method: "GET",
-  };
-
-  const req = http.request(options, (res) => {
-    let data = "";
-
-    res.on("data", (chunk) => {
-      data += chunk;
+    const fetch = require('node-fetch');
+    fetch('http://127.0.0.1:8000/data/1')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      temp = data.pk;
+      pressure = data.packet;
+      humidity = data.random_int;
+    })
+    .catch(error => {
+      console.error('Failed to fetch data from endpoint:', error);
     });
-
-    res.on("end", () => {
-      // Parse the data into a JavaScript object or other data type
-      const parsedData = JSON.parse(data);
-
-      // Do something with the parsed data
-      pos = parsedData.pos;
-      vel = parsedData.vel;
-      acc = parsedData.acceleration;
-    });
-  });
-
-  req.on("error", (error) => {
-    console.error(error);
-  });
-
-  req.end();
 };
 
 Spacecraft.prototype.updateState = function () {
-  this.state["prop.fuel"] = pos;
-  this.state["pwr.temp"] = vel;
-  this.state["pwr.v"] = acc;
-  if (this.state["prop.thrusters"] === "ON") {
-    this.state["pwr.c"] = 8.15;
-  } else {
-    this.state["pwr.c"] = this.state["pwr.c"] * 0.985;
-  }
+  this.state["prop.temp"] = temp;
+  this.state["prop.pressure"] = pressure;
+  this.state["prop.humidity"] = humidity;
 };
 
 /**
