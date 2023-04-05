@@ -5,10 +5,10 @@ function getDictionary() {
         });
 }
 
-var objectProvider = {
+let objectProvider = {
     get: function (identifier) {
         return getDictionary().then(function (dictionary) {
-            if (identifier.key === 'spacecraft') {
+            if (identifier.key === 'balloon') {
                 return {
                     identifier: identifier,
                     name: dictionary.name,
@@ -16,26 +16,26 @@ var objectProvider = {
                     location: 'ROOT'
                 };
             } else {
-                var measurement = dictionary.measurements.filter(function (m) {
+                let measurement = dictionary.measurements.filter(function (m) {
                     return m.key === identifier.key;
                 })[0];
                 return {
                     identifier: identifier,
                     name: measurement.name,
-                    type: 'example.telemetry',
+                    type: 'EOS',
                     telemetry: {
                         values: measurement.values
                     },
-                    location: 'example.taxonomy:spacecraft'
+                    location: 'EOS:balloon'
                 };
             }
         });
     }
 };
 
-var compositionProvider = {
+let compositionProvider = {
     appliesTo: function (domainObject) {
-        return domainObject.identifier.namespace === 'example.taxonomy' &&
+        return domainObject.identifier.namespace === 'EOS' &&
                domainObject.type === 'folder';
     },
     load: function (domainObject) {
@@ -43,7 +43,7 @@ var compositionProvider = {
             .then(function (dictionary) {
                 return dictionary.measurements.map(function (m) {
                     return {
-                        namespace: 'example.taxonomy',
+                        namespace: 'EOS',
                         key: m.key
                     };
                 });
@@ -51,20 +51,20 @@ var compositionProvider = {
     }
 };
 
-var DictionaryPlugin = function (openmct) {
+let DictionaryPlugin = function (openmct) {
     return function install(openmct) {
         openmct.objects.addRoot({
-            namespace: 'example.taxonomy',
-            key: 'spacecraft'
+            namespace: 'EOS',
+            key: 'balloon'
         });
 
-        openmct.objects.addProvider('example.taxonomy', objectProvider);
+        openmct.objects.addProvider('EOS', objectProvider);
 
         openmct.composition.addProvider(compositionProvider);
 
-        openmct.types.addType('example.telemetry', {
-            name: 'Example Telemetry Point',
-            description: 'Example telemetry point from our happy tutorial.',
+        openmct.types.addType('EOS', {
+            name: 'Telemetry Endpoints',
+            description: 'Data from sensors aboard the EOS Weather Balloon.',
             cssClass: 'icon-telemetry'
         });
     };

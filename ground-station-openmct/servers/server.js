@@ -1,21 +1,23 @@
-var Spacecraft = require('./spacecraft');
-var RealtimeServer = require('./realtime-server');
-var StaticServer = require('./static-server');
+let Balloon = require('./balloon');
+let RealtimeServer = require('./realtime-server');
+let HistoryServer = require('./history-server');
+let StaticServer = require('./static-server');
 
-var expressWs = require('express-ws');
-var app = require('express')();
+let expressWs = require('express-ws');
+let app = require('express')();
 expressWs(app);
 
-var spacecraft = new Spacecraft();
-var realtimeServer = new RealtimeServer(spacecraft);
-var staticServer = new StaticServer();
+let balloon = new Balloon();
+let realtimeServer = new RealtimeServer(balloon);
+let historyServer = new HistoryServer(balloon);
+let staticServer = new StaticServer();
 
 app.use('/realtime', realtimeServer);
+app.use('/history', historyServer);
 app.use('/', staticServer);
 
-var port = process.env.PORT || 8081
+let port = process.env.PORT || 8081
 
 app.listen(port, function () {
     console.log('Open MCT hosted at http://localhost:' + port);
-    console.log('Realtime hosted at ws://localhost:' + port + '/realtime');
 });

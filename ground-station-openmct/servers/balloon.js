@@ -1,8 +1,11 @@
 let temp = 0;
 let pressure = 0;
 let humidity = 0;
+let x = 0;
+let y = 0;
+let z = 0;
 
-function Spacecraft() {
+function Balloon() {
     this.state = {
         "prop.temp": 77,
         "prop.pressure": 10,
@@ -21,14 +24,15 @@ function Spacecraft() {
       this.updateState();
       this.generateTelemetry();
     }.bind(this),
-    1000
+    3000
   );
 
   console.log("Graphs booting up!");
 }
 
-Spacecraft.prototype.pull = function () {
+Balloon.prototype.pull = function () {
     const fetch = require('node-fetch');
+
     fetch('http://127.0.0.1:8000/data/1')
     .then(response => response.json())
     .then(data => {
@@ -42,7 +46,7 @@ Spacecraft.prototype.pull = function () {
     });
 };
 
-Spacecraft.prototype.updateState = function () {
+Balloon.prototype.updateState = function () {
   this.state["prop.temp"] = temp;
   this.state["prop.pressure"] = pressure;
   this.state["prop.humidity"] = humidity;
@@ -52,7 +56,7 @@ Spacecraft.prototype.updateState = function () {
  * Takes a measurement of spacecraft state, stores in history, and notifies
  * listeners.
  */
-Spacecraft.prototype.generateTelemetry = function () {
+Balloon.prototype.generateTelemetry = function () {
     var timestamp = Date.now(), sent = 0;
     Object.keys(this.state).forEach(function (id) {
         var state = { timestamp: timestamp, value: this.state[id], id: id};
@@ -62,13 +66,13 @@ Spacecraft.prototype.generateTelemetry = function () {
     }, this);
 };
 
-Spacecraft.prototype.notify = function (point) {
+Balloon.prototype.notify = function (point) {
     this.listeners.forEach(function (l) {
         l(point);
     });
 };
 
-Spacecraft.prototype.listen = function (listener) {
+Balloon.prototype.listen = function (listener) {
     this.listeners.push(listener);
     return function () {
         this.listeners = this.listeners.filter(function (l) {
@@ -78,5 +82,5 @@ Spacecraft.prototype.listen = function (listener) {
 };
 
 module.exports = function () {
-    return new Spacecraft()
+    return new Balloon()
 };

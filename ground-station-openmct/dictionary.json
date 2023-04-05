@@ -1,5 +1,5 @@
 {
-    "name": "EOS Balloon",
+    "name": "EOS",
     "key": "sc",
     "measurements": [
         {
@@ -65,6 +65,84 @@
                     "format": "float",
                     "min": 0,
                     "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "X-Rotation",
+            "key": "prop.x_rotation",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "deg",
+                    "format": "float",
+                    "min": 0,
+                    "max": 360,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Y-Rotation",
+            "key": "prop.temp",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "deg",
+                    "format": "float",
+                    "min": 0,
+                    "max": 360,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Z-Rotation",
+            "key": "prop.z_rotation",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "deg",
+                    "format": "float",
+                    "min": 0,
+                    "max": 360,
                     "hints": {
                         "range": 1
                     }

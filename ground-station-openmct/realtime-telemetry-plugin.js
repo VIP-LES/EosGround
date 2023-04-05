@@ -1,7 +1,7 @@
 function RealtimeTelemetryPlugin() {
     return function (openmct) {
-        var socket = new WebSocket(location.origin.replace(/^http/, 'ws') + '/realtime/');
-        var listener = {};
+        let socket = new WebSocket(location.origin.replace(/^http/, 'ws') + '/realtime/');
+        let listener = {};
 
         socket.onmessage = function (event) {
             point = JSON.parse(event.data);
@@ -10,9 +10,9 @@ function RealtimeTelemetryPlugin() {
             }
         };
 
-        var provider = {
+        let provider = {
             supportsSubscribe: function (domainObject) {
-                return domainObject.type === 'example.telemetry';
+                return domainObject.type === 'EOS';
             },
             subscribe: function (domainObject, callback) {
                 listener[domainObject.identifier.key] = callback;

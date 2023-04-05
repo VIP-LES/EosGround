@@ -10,10 +10,10 @@
 
   'use strict';
 
-  var exports = {};
+  let exports = {};
 
-  var generateResponse = function (req) {
-    var response = {
+  let generateResponse = function (req) {
+    let response = {
         data: req.responseText,
         status: req.status,
         request: req
@@ -24,14 +24,14 @@
     return response;
   };
 
-  var xhr = function (type, url, data) {
-      var promise = new Promise(function (resolve, reject) {
-          var XHR = XMLHttpRequest || ActiveXObject;
-          var request = new XHR('MSXML2.XMLHTTP.3.0');
+  let xhr = function (type, url, data) {
+      let promise = new Promise(function (resolve, reject) {
+          let XHR = XMLHttpRequest || ActiveXObject;
+          let request = new XHR('MSXML2.XMLHTTP.3.0');
 
           request.open(type, url, true);
           request.onreadystatechange = function () {
-            var req;
+            let req;
             if (request.readyState === 4) {
               req = generateResponse(request);
               if (request.status >= 200 && request.status < 300) {

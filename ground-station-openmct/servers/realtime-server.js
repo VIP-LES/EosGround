@@ -1,13 +1,13 @@
-var express = require('express');
+let express = require('express');
 
-function RealtimeServer(spacecraft) {
+function RealtimeServer(balloon) {
 
-    var router = express.Router();
+    let router = express.Router();
 
     router.ws('/', function (ws) {
-        var unlisten = spacecraft.listen(notifySubscribers);
-        var subscribed = {}; // Active subscriptions for this connection
-        var handlers = { // Handlers for specific requests
+        let unlisten = balloon.listen(notifySubscribers);
+        let subscribed = {}; // Active subscriptions for this connection
+        let handlers = { // Handlers for specific requests
                 subscribe: function (id) {
                     subscribed[id] = true;
                 },
@@ -24,7 +24,7 @@ function RealtimeServer(spacecraft) {
 
         // Listen for requests
         ws.on('message', function (message) {
-            var parts = message.split(' '),
+            let parts = message.split(' '),
                 handler = handlers[parts[0]];
             if (handler) {
                 handler.apply(handlers, parts.slice(1));
