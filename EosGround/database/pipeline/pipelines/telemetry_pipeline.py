@@ -39,7 +39,6 @@ class TelemetryPipeline(PipelineBase):
 
     def transform(self, session: Session, record: namedtuple):
         print(f"transforming telemetry_pipeline row id={record.id}")
-        record.processed = True
         packet_data = TelemetryData.decode_data(record.packet_body)
         packet_id = record.id
         timestamp = packet_data.timestamp
@@ -58,5 +57,7 @@ class TelemetryPipeline(PipelineBase):
                                x_rotation=x_rotation,
                                y_rotation=y_rotation,
                                z_rotation=z_rotation)
+
+        record.processed = True
 
         session.add(insert_row)

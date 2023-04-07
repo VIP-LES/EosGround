@@ -3,25 +3,13 @@ from sqlalchemy.orm import Query, Session
 
 from EosLib.packet.definitions import Type
 
-import EosGround.database.models.eos.position
 from EosGround.database.pipeline.lib.pipeline_base import PipelineBase
 from EosGround.database.models.eos.received_packets import ReceivedPackets
-from EosGround.database.models.eos.position import Position
-from EosLib.format.position import Position
+
+from EosGround.database.models.eos.position import Position as Position_Model
+from EosLib.format.position import Position as Position_Format
 
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
-
-
-# Test SQL (run from pgAdmin after starting pipeline):
-#
-# BEGIN;
-#
-# INSERT INTO test_schema.test1 (random_number)
-# VALUES (1), (2), (3);
-#
-# NOTIFY test_start;
-#
-# COMMIT;
 
 
 class PositionPipeline(PipelineBase):
@@ -41,7 +29,7 @@ class PositionPipeline(PipelineBase):
     def transform(self, session: Session, record: namedtuple):
         print(f"transforming position_pipeline row id={record.id}")
         record.processed = True
-        packet_data = Position.decode_position(record.packet_body)
+        packet_data = Position_Format.decode_position(record.packet_body)
         packet_id = record.id
         time_stamp = packet_data.timestamp
         latitude = packet_data.latitude
@@ -50,7 +38,7 @@ class PositionPipeline(PipelineBase):
         speed = packet_data.speed
         num_satellites = packet_data.number_of_satellites
         flight_state = packet_data.flight_state
-        insert_row = EosGround.database.models.eos.position.Position(
+        insert_row = Position_Model(
                               packet_id=packet_id,
                               latitude=latitude,
                               longitude=longitude,

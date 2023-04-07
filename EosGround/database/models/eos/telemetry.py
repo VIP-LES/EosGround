@@ -11,7 +11,7 @@ class Telemetry(TableBase):
     __table_args__ = {'schema': SCHEMA}
 
     id: Mapped[int] = mapped_column(Integer, Identity(start=1), primary_key=True, init=False)
-    packet_id: Mapped[int | None] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
+    packet_id: Mapped[int] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
     timestamp: Mapped[datetime] = mapped_column(TIMESTAMP)
     temperature: Mapped[float] = mapped_column(REAL)
     pressure: Mapped[float] = mapped_column(REAL)

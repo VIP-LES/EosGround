@@ -13,11 +13,11 @@ class Position(TableBase):
     __table_args__ = {'schema': SCHEMA}
 
     id: Mapped[int] = mapped_column(Integer, Identity(start=1), primary_key=True, init=False)
-    packet_id: Mapped[int | None] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
+    packet_id: Mapped[int] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
     timestamp: Mapped[datetime] = mapped_column(TIMESTAMP)
     latitude: Mapped[float] = mapped_column(REAL)
     longitude: Mapped[float] = mapped_column(REAL)
     altitude: Mapped[float] = mapped_column(REAL)
     speed:  Mapped[float] = mapped_column(REAL)
-    num_satellites: Mapped[int] = mapped_column(Integer)
+    num_satellites: Mapped[int] = mapped_column()
     flight_state: Mapped[FlightState] = mapped_column(Integer)

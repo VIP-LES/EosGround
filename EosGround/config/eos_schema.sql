@@ -98,7 +98,7 @@ ALTER TABLE IF EXISTS eos_schema.test_data
 
 CREATE TABLE IF NOT EXISTS eos_schema.telemetry
 (
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     packet_id int NOT NULL,
     "timestamp" timestamp without time zone,
     temperature double precision,
@@ -124,7 +124,7 @@ ALTER TABLE IF EXISTS eos_schema.telemetry
 
 CREATE TABLE IF NOT EXISTS eos_schema."position"
 (
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     packet_id integer NOT NULL,
     "timestamp" timestamp without time zone,
     latitude real,

@@ -25,6 +25,8 @@ cursor = conn.cursor()  # creates cursor
 
 # sets up digi
 PORT = "COM12"
+# aryan's port:
+# PORT = "/dev/cu.usbserial-FT5PG7VE2"
 device = XBeeDevice(PORT, 9600)
 device.open()
 

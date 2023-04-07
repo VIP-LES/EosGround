@@ -1,11 +1,10 @@
-import time
-
 from EosLib.packet.packet import Packet
 import EosLib.packet.definitions
 import EosLib.packet.packet
 import EosLib.packet.transmit_header
 import EosLib.packet.data_header
 from EosLib.device import Device
+import os
 
 import psycopg2
 from config.config import get_config
@@ -21,8 +20,8 @@ from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeli
 global sequence_number
 sequence_number = 0
 
-
-conn_params = get_config('/Users/aryan_battula/VIP-LES/EosGround/EosGround/config/database.ini')  # gets config params
+conn_params = get_config(os.path.join('config', 'database.ini'))
+# conn_params = get_config('/Users/aryan_battula/VIP-LES/EosGround/EosGround/config/database.ini')  # gets config params
 conn = psycopg2.connect(**conn_params)  # gets connection object
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit
 cursor = conn.cursor()  # creates cursor
@@ -38,13 +37,9 @@ def data_receive_callback(xbee_message):
             """, (xbee_message.data, 0, False)
         )
         cursor.execute(f"NOTIFY {PacketPipeline.get_listen_channel()}")
-        print(xbee_message.data)
-        for i in range(len(xbee_message.data)):
-            print(xbee_message.data[i])
-        # print(xbee_message.data)
+
     except psycopg2.OperationalError:
         print("Error inserting into database")
-
 
 #  function called anytime new data is put into database
 def send_command():
@@ -110,14 +105,33 @@ class MessageWrapper:
 
 
 if __name__ == "__main__":
-    data_header = EosLib.packet.data_header.DataHeader(Device.O3, Type.POSITION)
-    transmit_header = EosLib.packet.transmit_header.TransmitHeader(2)
+    # POSITION
+    position_data_header = EosLib.packet.data_header.DataHeader(Device.O3, Type.POSITION)
+    position_transmit_header = EosLib.packet.transmit_header.TransmitHeader(2)
 
     current_time = datetime.now()
     new_data = Position()
 
     encoded_new_data = new_data.encode_position(current_time.timestamp(), 23.4, 23.4, 23.4, 23.4, 5, FlightState.NOT_SET)
 
-    packet = Packet(encoded_new_data, data_header, transmit_header)
+    packet = Packet(encoded_new_data, position_data_header, position_transmit_header)
     wrapper = MessageWrapper(packet.encode())
     data_receive_callback(wrapper)
+    # TELEMETRY
+    telemetry_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.TELEMETRY_DATA)
+    telemetry_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)
+    telemetry = TelemetryData(
+        timestamp=datetime.now(),
+        temperature=3.14,
+        pressure=23.32,
+        humidity=234.5,
+        x_rotation=0.234,
+        y_rotation=0.454,
+        z_rotation=2.2
+    )
+    telemetry_packet = Packet(
+        body=telemetry.encode(),
+        data_header=telemetry_data_header,
+        transmit_header=telemetry_transmit_header
+    )
+    data_receive_callback(MessageWrapper(telemetry_packet.encode()))
