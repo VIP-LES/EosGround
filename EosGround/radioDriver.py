@@ -24,12 +24,12 @@ conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets
 cursor = conn.cursor()  # creates cursor
 
 # sets up digi
-PORT = "COM12"
+PORT = "COM15"
 # aryan's port:
 # PORT = "/dev/cu.usbserial-FT5PG7VE2"
 device = XBeeDevice(PORT, 9600)
 device.open()
-
+print("Device is Open")
 
 # function called when data is received
 def data_receive_callback(xbee_message):
@@ -56,6 +56,7 @@ def send_command():
     """)
 
     cmdrows = cursor.fetchall()
+    print(cmdrows)
 
     for row in cmdrows:
         packet_id = row[0]
@@ -81,7 +82,7 @@ def send_command():
         packet = Packet(data_header=data_header, body=packet_body.encode())  # transmit packet
         packet.transmit_header = transmit_header
 
-        device.send_data_async(remote, packet.encode())
+        device.send_data_async(remote, packet.encode(), transmit_options=1)
         sequence_number += 1
         time_sent = datetime.datetime.now()
 
@@ -94,7 +95,7 @@ def send_command():
 
 
 device.add_data_received_callback(data_receive_callback)  # add data receive callback
-remote = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string("FFFF"))  # add digi remote device
+remote = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string("000000000000FFFF"))  # add digi remote device
 
 cursor.execute("LISTEN update;")  # adds listen
 while True:
