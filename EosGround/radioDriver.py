@@ -24,9 +24,10 @@ conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets
 cursor = conn.cursor()  # creates cursor
 
 # sets up digi
-PORT = "COM12"
+# PORT = "COM12"
 # aryan's port:
 # PORT = "/dev/cu.usbserial-FT5PG7VE2"
+PORT = "/dev/cu.usbserial-FT5PFML62"
 device = XBeeDevice(PORT, 9600)
 device.open()
 
@@ -34,7 +35,7 @@ device.open()
 # function called when data is received
 def data_receive_callback(xbee_message):
     try:
-        received_time = datetime.now()
+        received_time = datetime.datetime.now()
         cursor.execute(
             """
             INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed, received_time) VALUES 
