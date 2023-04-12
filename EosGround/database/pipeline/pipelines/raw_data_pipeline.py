@@ -7,17 +7,6 @@ from EosGround.database.models.eos.received_packets import ReceivedPackets
 from EosLib.packet.packet import Packet
 from datetime import datetime
 
-# Test SQL (run from pgAdmin after starting pipeline):
-#
-# BEGIN;
-#
-# INSERT INTO test_schema.test1 (random_number)
-# VALUES (1), (2), (3);
-#
-# NOTIFY packet_pipeline;
-#
-# COMMIT;
-
 
 class PacketPipeline(PipelineBase):
 
@@ -30,7 +19,7 @@ class PacketPipeline(PipelineBase):
         return "position_telemetry_pipeline"
 
     def extract(self, session: Session) -> Query:
-        return session.query(ReceivedData).filter_by(processed=False)
+        return session.query(ReceivedData).filter_by(processed=False).order_by(ReceivedData.id)
 
     def transform(self, session: Session, record: namedtuple):
         print(f"transforming raw_data_pipeline row id={record.id}")
@@ -46,10 +35,12 @@ class PacketPipeline(PipelineBase):
         send_time = packet.transmit_header.send_time
 
         packet_body = packet.body
-        received_time = datetime.now()
+
+        received_time = record.received_time
 
         # update the row from table test1 to set processed=True
         record.processed = True
+
         # insert a new row into table test2
         insert_row = ReceivedPackets(data_id=record.id,
                                      packet_type=data_type,
@@ -61,4 +52,5 @@ class PacketPipeline(PipelineBase):
                                      send_time=send_time,
                                      received_time=received_time,
                                      packet_body=packet_body)
+
         session.add(insert_row)

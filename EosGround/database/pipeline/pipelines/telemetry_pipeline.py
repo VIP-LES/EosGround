@@ -11,18 +11,6 @@ from EosLib.format.telemetry_data import TelemetryData
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 
 
-# Test SQL (run from pgAdmin after starting pipeline):
-#
-# BEGIN;
-#
-# INSERT INTO test_schema.test1 (random_number)
-# VALUES (1), (2), (3);
-#
-# NOTIFY test_start;
-#
-# COMMIT;
-
-
 class TelemetryPipeline(PipelineBase):
 
     @staticmethod

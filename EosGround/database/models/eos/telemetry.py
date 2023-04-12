@@ -1,4 +1,4 @@
-from sqlalchemy import Identity, Integer, TIMESTAMP, REAL, ForeignKey
+from sqlalchemy import Identity, Integer, TIMESTAMP, ForeignKey, DOUBLE_PRECISION
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 
@@ -13,9 +13,9 @@ class Telemetry(TableBase):
     id: Mapped[int] = mapped_column(Integer, Identity(start=1), primary_key=True, init=False)
     packet_id: Mapped[int] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
     timestamp: Mapped[datetime] = mapped_column(TIMESTAMP)
-    temperature: Mapped[float] = mapped_column(REAL)
-    pressure: Mapped[float] = mapped_column(REAL)
-    humidity: Mapped[float] = mapped_column(REAL)
-    x_rotation:  Mapped[float] = mapped_column(REAL)
-    y_rotation: Mapped[float] = mapped_column(REAL)
-    z_rotation: Mapped[float] = mapped_column(REAL)
+    temperature: Mapped[float] = mapped_column(DOUBLE_PRECISION)
+    pressure: Mapped[float] = mapped_column(DOUBLE_PRECISION)
+    humidity: Mapped[float] = mapped_column(DOUBLE_PRECISION)
+    x_rotation:  Mapped[float] = mapped_column(DOUBLE_PRECISION)
+    y_rotation: Mapped[float] = mapped_column(DOUBLE_PRECISION)
+    z_rotation: Mapped[float] = mapped_column(DOUBLE_PRECISION)

@@ -34,17 +34,17 @@ device.open()
 # function called when data is received
 def data_receive_callback(xbee_message):
     try:
+        received_time = datetime.now()
         cursor.execute(
             """
-            INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed) VALUES 
-            (%s,%s,%s)
-            """, (xbee_message.data, 0, False)
+            INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed, received_time) VALUES 
+            (%s,%s,%s,%s)
+            """, (xbee_message.data, 0, False, received_time)
         )
         cursor.execute(f"NOTIFY {PacketPipeline.get_listen_channel()}")
 
     except psycopg2.OperationalError:
         print("Error inserting into database")
-
 
 
 #  function called anytime new data is put into database

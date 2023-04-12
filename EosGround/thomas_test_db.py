@@ -30,16 +30,18 @@ cursor = conn.cursor()  # creates cursor
 # function called when data is received
 def data_receive_callback(xbee_message):
     try:
+        time = datetime.now()
         cursor.execute(
             """
-            INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed) VALUES 
-            (%s,%s,%s)
-            """, (xbee_message.data, 0, False)
+            INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed, received_time) VALUES 
+            (%s,%s,%s,%s)
+            """, (xbee_message.data, 0, False, time)
         )
         cursor.execute(f"NOTIFY {PacketPipeline.get_listen_channel()}")
 
     except psycopg2.OperationalError:
         print("Error inserting into database")
+
 
 #  function called anytime new data is put into database
 def send_command():
@@ -99,6 +101,7 @@ cursor.execute("LISTEN update;")  # adds listen
 #        conn.notifies.clear()
 #    time.sleep(0.01)
 
+
 class MessageWrapper:
     def __init__(self, data):
         self.data = data
@@ -117,6 +120,7 @@ if __name__ == "__main__":
     packet = Packet(encoded_new_data, position_data_header, position_transmit_header)
     wrapper = MessageWrapper(packet.encode())
     data_receive_callback(wrapper)
+
     # TELEMETRY
     telemetry_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.TELEMETRY_DATA)
     telemetry_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)

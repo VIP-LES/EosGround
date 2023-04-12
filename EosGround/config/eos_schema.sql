@@ -14,14 +14,25 @@ GRANT ALL ON SCHEMA eos_schema TO pg_database_owner;
 BEGIN;
 
 
+--CREATE TABLE IF NOT EXISTS eos_schema.received_data
+--(
+--    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+--    raw_bytes bytea NOT NULL,
+--    rssi int NOT NULL,
+--    processed boolean NOT NULL DEFAULT FALSE,
+--    CONSTRAINT received_data_pkey PRIMARY KEY (id)
+--);
+
 CREATE TABLE IF NOT EXISTS eos_schema.received_data
 (
-    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     raw_bytes bytea NOT NULL,
-    rssi int NOT NULL,
-    processed boolean NOT NULL DEFAULT FALSE,
+    rssi integer NOT NULL,
+    processed boolean NOT NULL DEFAULT false,
+    received_time timestamp without time zone,
     CONSTRAINT received_data_pkey PRIMARY KEY (id)
 );
+
 
 CREATE TABLE IF NOT EXISTS eos_schema.received_packets
 (
@@ -127,10 +138,10 @@ CREATE TABLE IF NOT EXISTS eos_schema."position"
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     packet_id integer NOT NULL,
     "timestamp" timestamp without time zone,
-    latitude real,
-    longitude real,
-    altitude real,
-    speed real,
+    latitude double precision,
+    longitude double precision,
+    altitude double precision,
+    speed double precision,
     num_satellites integer,
     flight_state integer,
     CONSTRAINT position_pkey PRIMARY KEY (id)
