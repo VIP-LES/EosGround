@@ -41,7 +41,7 @@ def send_cutdown_command():
         packet_type = Type.DATA
         packet_priority = Priority.DATA
         packet_destination = Device.MISC_ENGINEERING_2
-        packet_body = ""
+        packet_body = "DEWIT!"
 
         cursor.execute(
             """
