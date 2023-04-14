@@ -14,14 +14,25 @@ GRANT ALL ON SCHEMA eos_schema TO pg_database_owner;
 BEGIN;
 
 
+--CREATE TABLE IF NOT EXISTS eos_schema.received_data
+--(
+--    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+--    raw_bytes bytea NOT NULL,
+--    rssi int NOT NULL,
+--    processed boolean NOT NULL DEFAULT FALSE,
+--    CONSTRAINT received_data_pkey PRIMARY KEY (id)
+--);
+
 CREATE TABLE IF NOT EXISTS eos_schema.received_data
 (
-    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     raw_bytes bytea NOT NULL,
-    rssi int NOT NULL,
-    processed boolean NOT NULL DEFAULT FALSE,
+    rssi integer NOT NULL,
+    processed boolean NOT NULL DEFAULT false,
+    received_time timestamp without time zone,
     CONSTRAINT received_data_pkey PRIMARY KEY (id)
 );
+
 
 CREATE TABLE IF NOT EXISTS eos_schema.received_packets
 (
@@ -87,6 +98,57 @@ ALTER TABLE IF EXISTS eos_schema.temperature
 
 ALTER TABLE IF EXISTS eos_schema.test_data
     ADD CONSTRAINT test_data_to_received_packet FOREIGN KEY (packet_id)
+    REFERENCES eos_schema.received_packets (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+-- Table: eos_schema.telemetry
+
+-- DROP TABLE IF EXISTS eos_schema.telemetry;
+
+CREATE TABLE IF NOT EXISTS eos_schema.telemetry
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    packet_id int NOT NULL,
+    "timestamp" timestamp without time zone,
+    temperature double precision,
+    pressure double precision,
+    humidity double precision,
+    x_rotation double precision,
+    y_rotation double precision,
+    z_rotation double precision,
+    CONSTRAINT received_telemetry_data_pkey PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS eos_schema.telemetry
+    ADD CONSTRAINT telemetry_to_received_packet FOREIGN KEY (packet_id)
+    REFERENCES eos_schema.received_packets (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
+-- Table: eos_schema.position
+
+-- DROP TABLE IF EXISTS eos_schema."position";
+
+CREATE TABLE IF NOT EXISTS eos_schema."position"
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    packet_id integer NOT NULL,
+    "timestamp" timestamp without time zone,
+    latitude double precision,
+    longitude double precision,
+    altitude double precision,
+    speed double precision,
+    num_satellites integer,
+    flight_state integer,
+    CONSTRAINT position_pkey PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS eos_schema."position"
+    ADD CONSTRAINT position_to_received_packet FOREIGN KEY (packet_id)
     REFERENCES eos_schema.received_packets (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION

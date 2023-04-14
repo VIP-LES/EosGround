@@ -1,0 +1,1 @@
+SCHEMA = 'eos_schema'

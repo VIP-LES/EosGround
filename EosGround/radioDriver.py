@@ -1,3 +1,6 @@
+import datetime
+import os
+import psycopg2
 import time
 
 from digi.xbee.devices import XBeeDevice
@@ -9,20 +12,22 @@ import EosLib.packet.definitions
 import EosLib.packet.packet
 import EosLib.packet.transmit_header
 
-import psycopg2
-from config.config import config
-import datetime
+from config.config import get_config
+from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 
 global sequence_number
 sequence_number = 0
 
-conn_params = config('database.ini')  # gets config params
+conn_params = get_config(os.path.join('config', 'database.ini'))  # gets config params
 conn = psycopg2.connect(**conn_params)  # gets connection object
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit
 cursor = conn.cursor()  # creates cursor
 
 # sets up digi
-PORT = "COM12"
+# PORT = "COM12"
+# aryan's port:
+# PORT = "/dev/cu.usbserial-FT5PG7VE2"
+PORT = "/dev/cu.usbserial-FT5PFML62"
 device = XBeeDevice(PORT, 9600)
 device.open()
 
@@ -30,12 +35,15 @@ device.open()
 # function called when data is received
 def data_receive_callback(xbee_message):
     try:
+        received_time = datetime.datetime.now()
         cursor.execute(
             """
-            INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed) VALUES 
-            (%s,%s,%s)
-            """, (xbee_message.data, 0, False)
+            INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed, received_time) VALUES 
+            (%s,%s,%s,%s)
+            """, (xbee_message.data, 0, False, received_time)
         )
+        cursor.execute(f"NOTIFY {PacketPipeline.get_listen_channel()}")
+
     except psycopg2.OperationalError:
         print("Error inserting into database")
 
