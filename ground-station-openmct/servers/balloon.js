@@ -41,7 +41,7 @@ function Balloon() {
       this.updateState();
       this.generateTelemetry();
     }.bind(this),
-    3000
+    2000
   );
 
   console.log("Graphs booting up!");
