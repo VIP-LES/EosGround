@@ -1,11 +1,26 @@
-# Create your models here.
-
 from django.db import models
+
+
+class Position(models.Model):
+    packet = models.ForeignKey('ReceivedPackets', models.DO_NOTHING)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    altitude = models.FloatField(blank=True, null=True)
+    speed = models.FloatField(blank=True, null=True)
+    num_satellites = models.IntegerField(blank=True, null=True)
+    flight_state = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'position'
+
 
 class ReceivedData(models.Model):
     raw_bytes = models.BinaryField()
     rssi = models.IntegerField()
     processed = models.BooleanField()
+    received_time = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -28,6 +43,21 @@ class ReceivedPackets(models.Model):
     class Meta:
         managed = False
         db_table = 'received_packets'
+
+
+class Telemetry(models.Model):
+    packet = models.ForeignKey(ReceivedPackets, models.DO_NOTHING)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    temperature = models.FloatField(blank=True, null=True)
+    pressure = models.FloatField(blank=True, null=True)
+    humidity = models.FloatField(blank=True, null=True)
+    x_rotation = models.FloatField(blank=True, null=True)
+    y_rotation = models.FloatField(blank=True, null=True)
+    z_rotation = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'telemetry'
 
 
 class Temperature(models.Model):

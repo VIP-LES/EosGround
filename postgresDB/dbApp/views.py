@@ -1,9 +1,17 @@
 # Create your views here.
-from .models import TestData
-from .serializers import TestDataSerializer
+from .models import Position, Telemetry
+from .serializers import PositionSerializer, TelemetrySerializer
 from rest_framework import generics
-class TestDataList(generics.RetrieveAPIView):
+
+
+class PositionList(generics.RetrieveAPIView):
     # API endpoint that allows data to be viewed.
-    queryset = TestData.objects.all()
-    serializer_class = TestDataSerializer
+    queryset = Position.objects.all()
+    serializer_class = PositionSerializer
+
+
+class TelemetryList(generics.RetrieveAPIView):
+    # API endpoint that allows data to be viewed.
+    queryset = Telemetry.objects.all()
+    serializer_class = TelemetrySerializer
 

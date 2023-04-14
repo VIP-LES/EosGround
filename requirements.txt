@@ -14,3 +14,6 @@ psycopg2-binary==2.9.5
 pyserial==3.5
 SQLAlchemy==2.0.5.post1
 typing_extensions==4.5.0
+
+Django~=4.1.7
+djangorestframework~=3.14.0
