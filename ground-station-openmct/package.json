@@ -1,8 +1,8 @@
 {
   "version": "0.0.1",
-  "main": "server.js",
+  "main": "servers/server.js",
   "scripts": {
-    "start": "http-server"
+    "start": "node servers/server.js"
   },
   "repository": {
     "type": "git",
@@ -15,7 +15,10 @@
   },
   "homepage": "https://github.com/nasa/openmct-tutorial#readme",
   "dependencies": {
-    "openmct": "latest",
-    "http-server": "latest"
+    "express": "^4.16.4",
+    "express-ws": "^4.0.0",
+    "http-server": "latest",
+    "node-fetch": "2.0",
+    "openmct": "latest"
   }
 }

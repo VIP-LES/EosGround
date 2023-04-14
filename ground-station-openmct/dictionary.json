@@ -1,0 +1,318 @@
+{
+    "name": "EOS",
+    "key": "sc",
+    "measurements": [
+        {
+            "name": "Temperature",
+            "key": "prop.temp",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "celcius",
+                    "format": "float",
+                    "min": -100,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+      {
+            "name": "Pressure",
+            "key": "prop.pressure",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "mbar",
+                    "format": "float",
+                    "min": 0,
+                    "max": 500,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+      {
+            "name": "Humidity",
+            "key": "prop.humidity",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "%RH",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "X-Rotation",
+            "key": "prop.x_rotation",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "deg",
+                    "format": "float",
+                    "min": 0,
+                    "max": 360,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Y-Rotation",
+            "key": "prop.y_rotation",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "deg",
+                    "format": "float",
+                    "min": 0,
+                    "max": 360,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Z-Rotation",
+            "key": "prop.z_rotation",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "deg",
+                    "format": "float",
+                    "min": 0,
+                    "max": 360,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Latitude",
+            "key": "prop.latitude",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "deg",
+                    "format": "float",
+                    "min": -90,
+                    "max": 90,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Longitude",
+            "key": "prop.longitude",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "deg",
+                    "format": "float",
+                    "min": -180,
+                    "max": 180,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Altitude",
+            "key": "prop.altitude",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "feet",
+                    "format": "float",
+                    "min": -10000,
+                    "max": 100000,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Speed",
+            "key": "prop.speed",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "mph",
+                    "format": "float",
+                    "min": 0,
+                    "max": 100,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Number of Satellites",
+            "key": "prop.num_sat",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "Satellites",
+                    "format": "float",
+                    "min": 0,
+                    "max": 20,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Flight State",
+            "key": "prop.flight_state",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "N/A",
+                    "format": "float",
+                    "min": 0,
+                    "max": 4,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        }
+    ]
+}
