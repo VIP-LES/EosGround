@@ -36,12 +36,14 @@ device.open()
 def data_receive_callback(xbee_message):
     try:
         received_time = datetime.datetime.now()
+        # places xbee_message into received_data table
         cursor.execute(
             """
             INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed, received_time) VALUES 
             (%s,%s,%s,%s)
             """, (xbee_message.data, 0, False, received_time)
         )
+        # creates notify message to start pipeline
         cursor.execute(f"NOTIFY {PacketPipeline.get_listen_channel()}")
 
     except psycopg2.OperationalError:

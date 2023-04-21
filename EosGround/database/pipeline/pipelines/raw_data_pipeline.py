@@ -10,20 +10,27 @@ from datetime import datetime
 
 class PacketPipeline(PipelineBase):
 
+    # defines which string to listen for to start the pipeline
+
     @staticmethod
     def get_listen_channel() -> str:
         return "packet_pipeline"
 
+    # once the pipeline completes the tranformation it releases a
+    #notify message to start the next pipeline
     @staticmethod
     def get_notify_channel() -> str | None:
         return "position_telemetry_pipeline"
 
+    # takes the data from the source table and filters by records that
+    # have not been processed
     def extract(self, session: Session) -> Query:
         return session.query(ReceivedData).filter_by(processed=False).order_by(ReceivedData.id)
 
+    # unpacks the data from the raw bytes in the ReceivedData table
+    # places the attributes of the packet into ReceivedPackets table
     def transform(self, session: Session, record: namedtuple):
         print(f"transforming raw_data_pipeline row id={record.id}")
-
         packet = Packet.decode(record.raw_bytes)
         data_type = packet.data_header.data_type
         sender = packet.data_header.sender
@@ -38,10 +45,10 @@ class PacketPipeline(PipelineBase):
 
         received_time = record.received_time
 
-        # update the row from table test1 to set processed=True
+        # update the row from table ReceivedData to set processed=True
         record.processed = True
 
-        # insert a new row into table test2
+        # insert a new row into table ReceivedPackets
         insert_row = ReceivedPackets(data_id=record.id,
                                      packet_type=data_type,
                                      sender=sender,

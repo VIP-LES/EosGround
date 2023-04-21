@@ -7,7 +7,8 @@ from EosGround.database.models.eos import SCHEMA
 
 from EosLib.format.position import FlightState
 
-
+# Creates a model of the Position table and maps python types to their PostgreSQL counterparts
+#describes what the table looks like in code
 class Position(TableBase):
     __tablename__ = 'position'
     __table_args__ = {'schema': SCHEMA}
