@@ -35,3 +35,7 @@ Note: on Mac sometimes the postgres server acts up, try `sudo service postgres r
 
 ### Data Pipelines
 See docs [here](./docs/data_pipelines.md)
+
+## Running the OpenMCT Webserver
+- To run the Django backend: navigate to the postgresDB folder and run `python manage.py runserver`
+- In a new terminal, navigate to the ground-station-openmct folder and run `npm install` and then `npm start`

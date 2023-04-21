@@ -74,6 +74,9 @@ WSGI_APPLICATION = "postgresDB.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+# this is where the database connection goes
+# if there are any authentication issues, change the password field to match your password on pgadmin
+
 
 DATABASES = {
     'default': {

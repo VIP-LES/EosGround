@@ -1,5 +1,7 @@
 from django.db import models
 
+# creates models of the tables in the database to store values from it
+# can be done quickly by running 'python manage.py inspectdb' once the database is connected
 
 class Position(models.Model):
     packet = models.ForeignKey('ReceivedPackets', models.DO_NOTHING)
