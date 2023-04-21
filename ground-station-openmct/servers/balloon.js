@@ -1,3 +1,4 @@
+// initialize all telemetry and position data to 0
 let temp = 0;
 let pressure = 0;
 let humidity = 0;
@@ -10,9 +11,11 @@ let altitude = 0;
 let speed = 0;
 let num_sat = 0;
 let flight_state = 0;
+// keeps track of most updated endpoint number
 let telCounter = 1;
 let posCounter = 1;
 
+// initialize all states to 0
 function Balloon() {
     this.state = {
         "prop.temp": 0,
@@ -30,12 +33,14 @@ function Balloon() {
         "comms.recd": 0,
         "comms.sent": 0
     };
+    // Pulls old data for the historical graph
     this.history = {};
     this.listeners = [];
     Object.keys(this.state).forEach(function (k) {
         this.history[k] = [];
     }, this);
 
+    // Will pull data from django endpoints here and update the on graph based on interval
     setInterval(function () {
               this.pull();
       this.updateState();
@@ -48,6 +53,8 @@ function Balloon() {
 }
 
 Balloon.prototype.pull = function () {
+    // use fetch request here to call django endpoints using the counters to grab most recent data
+    // currently, if the response is not valid, it will not error, so decrementing inside catch block does not work
     const fetch = require('node-fetch');
 
     fetch(`http://127.0.0.1:8000/data/tel/${telCounter}`)
@@ -84,6 +91,7 @@ Balloon.prototype.pull = function () {
     posCounter++;
 };
 
+// this will update all the states after data is pulled using endpoints
 Balloon.prototype.updateState = function () {
   this.state["prop.temp"] = temp;
   this.state["prop.pressure"] = pressure;
