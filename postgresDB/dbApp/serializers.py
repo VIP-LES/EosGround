@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Position, Telemetry
 
+# serializers translate the models into a different formats like JSON
+
 
 class PositionSerializer(serializers.ModelSerializer):
     class Meta:
