@@ -1,11 +1,12 @@
 
 import os
 import psycopg2
+import csv
 
 from EosLib.packet.packet import Packet
 from EosLib.packet.definitions import Type
 from EosLib.format.telemetry_data import TelemetryData
-
+from EosLib.format.position import Position
 
 from config.config import get_config
 
@@ -22,10 +23,22 @@ cursor.execute("""
 
 rows = cursor.fetchall()
 
-for i in range(1):
-    first_row = rows[0]
-    id = first_row[0]
-    packet_bytes = bytes(first_row[1])
+tel_counter = 0
+pos_counter = 0
+other_counter = 0
+
+f_tel = open('FlightData/telemetry.csv', 'w', newline='')
+f_pos = open('FlightData/position.csv', 'w', newline='')
+f_other = open('FlightData/other.csv', 'w', newline='')
+
+writer_tel = csv.writer(f_tel)
+writer_pos = csv.writer(f_pos)
+writer_other = csv.writer(f_other)
+
+for i in range(len(rows)):
+    row = rows[i]
+    id = row[0]
+    packet_bytes = bytes(row[1])
     packet = Packet.decode(packet_bytes)
 
     send_time = packet.transmit_header.send_time
@@ -35,15 +48,39 @@ for i in range(1):
     destination = packet.data_header.destination
     body = packet.body
 
-    print(data_type)
-    print(body)
-
     if data_type == Type.TELEMETRY_DATA:
         packet_data = TelemetryData.decode_data(body)
-        print("TELEMETRY_DATA")
+        temperature = packet_data.temperature
+        pressure = packet_data.pressure
+        humidity = packet_data.humidity
+        x_rotation = packet_data.x_rotation
+        y_rotation = packet_data.y_rotation
+        z_rotation = packet_data.z_rotation
+        tel_row = [id, send_time, temperature, pressure, humidity, x_rotation, y_rotation, z_rotation]
+        writer_tel.writerow(tel_row)
+        tel_counter += 1
 
+    elif data_type == Type.POSITION:
+        packet_data = Position.decode_position(body)
+        latitude = packet_data.latitude
+        longitude = packet_data.longitude
+        altitude = packet_data.altitude
+        speed = packet_data.speed
+        number_of_satellites = packet_data.number_of_satellites
+        flight_state = packet_data.flight_state
+        pos_row = [id, send_time, latitude, longitude, altitude, speed, number_of_satellites, flight_state]
+        writer_pos.writerow(pos_row)
+        pos_counter += 1
 
+    elif data_type == Type.TELEMETRY:
+        other_counter += 1
+        other_row = [id, send_time, body.decode()]
+        writer_other.writerow(other_row)
 
-#packet_obj = Packet.encode(packet_bytes)
+print(tel_counter)
+print(pos_counter)
+print(other_counter)
 
-#print(packet)
+f_tel.close()
+f_pos.close()
+f_other.close()
