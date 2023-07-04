@@ -15,6 +15,8 @@ let flight_state = 0;
 let telCounter = 1;
 let posCounter = 1;
 
+let no_data = false;
+
 // initialize all states to 0
 function Balloon() {
     this.state = {
@@ -42,11 +44,15 @@ function Balloon() {
 
     // Will pull data from django endpoints here and update the on graph based on interval
     setInterval(function () {
-              this.pull();
-      this.updateState();
-      this.generateTelemetry();
+      this.pull();
+      if (no_data == false) {
+          console.log("update state");
+          this.updateState();
+          this.generateTelemetry();
+      }
     }.bind(this),
-    2000
+    3000
+
   );
 
   console.log("Graphs booting up!");
@@ -60,13 +66,17 @@ Balloon.prototype.pull = function () {
     fetch(`http://127.0.0.1:8000/data/tel/${telCounter}`)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
-      temp = data.temperature;
-      pressure = data.pressure;
-      humidity = data.humidity;
-      x = data.x_rotation;
-      y = data.y_rotation;
-      z = data.z_rotation;
+        console.log(data);
+        temp = data.temperature;
+        pressure = data.pressure;
+        humidity = data.humidity;
+        x = data.x_rotation;
+        y = data.y_rotation;
+        z = data.z_rotation;
+        no_data = false;
+        if (data.temp == undefined) {
+            no_data = true;
+        }
     })
     .catch(error => {
       console.error('Failed to fetch data from endpoint:', error);
@@ -83,12 +93,17 @@ Balloon.prototype.pull = function () {
         speed = data.speed;
         num_sat = data.num_satellites;
         flight_state = data.flight_state;
+        no_data = false;
+        if (data.lat == undefined) {
+            no_data = true;
+        }
     })
     .catch(error => {
       console.error('Failed to fetch data from endpoint:', error);
       posCounter--;
     })
     posCounter++;
+
 };
 
 // this will update all the states after data is pulled using endpoints

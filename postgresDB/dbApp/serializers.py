@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Position, Telemetry
+from .models import Position, Telemetry, TestData
 
 # serializers translate the models into a different formats like JSON
 
@@ -17,3 +17,7 @@ class TelemetrySerializer(serializers.ModelSerializer):
         fields = ['pk', 'packet', 'timestamp', 'temperature', 'pressure',
                   'humidity', 'x_rotation', 'y_rotation', 'z_rotation']
 
+class TestDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestData
+        fields = ['pk', 'rand_int']
