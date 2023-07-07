@@ -1,57 +1,55 @@
 // initialize all telemetry and position data to 0
-let temp = 0;
-let pressure = 0;
-let humidity = 0;
-let x = 0;
-let y = 0;
-let z = 0;
-let lat = 0;
-let long = 0;
-let altitude = 0;
-let speed = 0;
-let num_sat = 0;
-let flight_state = 0;
+let temp = undefined;
+let pressure = undefined;
+let humidity = undefined;
+let x = undefined;
+let y = undefined;
+let z = undefined;
+let lat = undefined;
+let long = undefined;
+let altitude = undefined;
+let speed = undefined;
+let num_sat = undefined;
+let flight_state = undefined;
 // keeps track of most updated endpoint number
 let telCounter = 1;
 let posCounter = 1;
 
-let no_data = false;
 
 // initialize all states to 0
 function Balloon() {
     this.state = {
-        "prop.temp": 0,
-        "prop.pressure": 0,
-        "prop.humidity": 0,
-        "prop.x_rotation": 0,
-        "prop.y_rotation": 0,
-        "prop.z_rotation": 0,
-        "prop.latitude": 0,
-        "prop.longitude": 0,
-        "prop.altitude": 0,
-        "prop.speed": 0,
-        "prop.num_sat": 0,
-        "prop.flight_state": 0,
+        "prop.temp": undefined,
+        "prop.pressure": undefined,
+        "prop.humidity": undefined,
+        "prop.x_rotation": undefined,
+        "prop.y_rotation": undefined,
+        "prop.z_rotation": undefined,
+        "prop.latitude": undefined,
+        "prop.longitude": undefined,
+        "prop.altitude": undefined,
+        "prop.speed": undefined,
+        "prop.num_sat": undefined,
+        "prop.flight_state": undefined,
         "comms.recd": 0,
         "comms.sent": 0
     };
     // Pulls old data for the historical graph
+
     this.history = {};
     this.listeners = [];
     Object.keys(this.state).forEach(function (k) {
         this.history[k] = [];
     }, this);
 
+
     // Will pull data from django endpoints here and update the on graph based on interval
     setInterval(function () {
       this.pull();
-      if (no_data == false) {
-          console.log("update state");
-          this.updateState();
-          this.generateTelemetry();
-      }
+      this.updateState();
+      this.generateTelemetry();
     }.bind(this),
-    3000
+    2000
 
   );
 
@@ -73,11 +71,6 @@ Balloon.prototype.pull = function () {
         x = data.x_rotation;
         y = data.y_rotation;
         z = data.z_rotation;
-        no_data = false;
-        console.log(data.temperature  == undefined);
-        if (data.temperature == undefined) {
-            no_data = true;
-        }
     })
     .catch(error => {
       console.error('Failed to fetch data from endpoint:', error);
@@ -88,16 +81,13 @@ Balloon.prototype.pull = function () {
     fetch(`http://127.0.0.1:8000/data/pos/${posCounter}`)
     .then (response => response.json())
     .then(data => {
+        console.log(data);
         lat = data.latitude;
         long = data.longitude;
         altitude = data.altitude;
         speed = data.speed;
         num_sat = data.num_satellites;
         flight_state = data.flight_state;
-        no_data = false;
-        if (data.latitude == undefined) {
-            no_data = true;
-        }
     })
     .catch(error => {
       console.error('Failed to fetch data from endpoint:', error);
@@ -130,10 +120,13 @@ Balloon.prototype.updateState = function () {
 Balloon.prototype.generateTelemetry = function () {
     let timestamp = Date.now(), sent = 0;
     Object.keys(this.state).forEach(function (id) {
-        let state = { timestamp: timestamp, value: this.state[id], id: id};
-        this.notify(state);
-        this.history[id].push(state);
-        this.state["comms.sent"] += JSON.stringify(state).length;
+        if (this.state[id] != undefined) {
+            let state = { timestamp: timestamp, value: this.state[id], id: id};
+            this.notify(state);
+            this.history[id].push(state);
+            this.state["comms.sent"] += JSON.stringify(state).length;
+        }
+
     }, this);
 };
 
