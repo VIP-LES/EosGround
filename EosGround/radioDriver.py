@@ -1,3 +1,4 @@
+from threading import Lock
 import datetime
 import os
 import traceback
@@ -25,10 +26,11 @@ conn_params = get_config(os.path.join('config', 'database.ini'))  # gets config 
 conn = psycopg2.connect(**conn_params)  # gets connection object
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit
 cursor = conn.cursor()  # creates cursor
+cursor_lock = Lock()
 print("connected to database")
 
 # sets up digi
-PORT = "COM15"
+PORT = "/dev/cu.usbserial-FT5PFML62"
 # aryan's port:
 # PORT = "/dev/cu.usbserial-FT5PG7VE2"
 #PORT = "/dev/cu.usbserial-FT5PFML62"
@@ -40,16 +42,17 @@ print("connected to xbee")
 # function called when data is received
 def data_receive_callback(xbee_message):
     try:
-        received_time = datetime.datetime.now()
-        # places xbee_message into received_data table
-        cursor.execute(
-            """
-            INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed, received_time) VALUES 
-            (%s,%s,%s,%s)
-            """, (xbee_message.data, 0, False, received_time)
-        )
-        # creates notify message to start pipeline
-        cursor.execute(f"NOTIFY {PacketPipeline.get_listen_channel()}")
+        with cursor_lock:
+            received_time = datetime.datetime.now()
+            # places xbee_message into received_data table
+            cursor.execute(
+                """
+                INSERT INTO eos_schema.received_data (raw_bytes, rssi, processed, received_time) VALUES 
+                (%s,%s,%s,%s)
+                """, (xbee_message.data, 0, False, received_time)
+            )
+            # creates notify message to start pipeline
+            cursor.execute(f"NOTIFY {PacketPipeline.get_listen_channel()}")
 
     except psycopg2.OperationalError:
         print("Error inserting into database")
@@ -58,12 +61,13 @@ def data_receive_callback(xbee_message):
 #  function called anytime new data is put into database
 def send_command():
     global sequence_number
-    cursor.execute("""
-    SELECT * FROM eos_schema.transmit_table WHERE time_sent is NULL
-    ORDER BY "id" DESC
-    """)
+    with cursor_lock:
+        cursor.execute("""
+        SELECT * FROM eos_schema.transmit_table WHERE time_sent is NULL
+        ORDER BY "id" DESC
+        """)
 
-    cmdrows = cursor.fetchall()
+        cmdrows = cursor.fetchall()
 
     print(f"Sending {len(cmdrows)} commands")
 
@@ -94,14 +98,15 @@ def send_command():
 
             device.send_data_async(remote, packet.encode(), transmit_options=TransmitOptions.DISABLE_ACK.value)
             sequence_number += 1
-            time_sent = datetime.datetime.now()
+            with cursor_lock:
+                time_sent = datetime.datetime.now()
 
-            cursor.execute(
-                """
-                UPDATE eos_schema.transmit_table 
-                SET time_sent = (%s)
-                WHERE id = (%s)
-                """, (time_sent, packet_id))
+                cursor.execute(
+                    """
+                    UPDATE eos_schema.transmit_table 
+                    SET time_sent = (%s)
+                    WHERE id = (%s)
+                    """, (time_sent, packet_id))
         except Exception as e:
             print(f"Failed to send command: {e}\n{traceback.print_exc()}")
 
@@ -109,10 +114,13 @@ def send_command():
 device.add_data_received_callback(data_receive_callback)  # add data receive callback
 remote = RemoteXBeeDevice(device, XBee64BitAddress.from_hex_string("000000000000FFFF"))  # add digi remote device
 
-cursor.execute("LISTEN update;")  # adds listen
+with cursor_lock:
+    cursor.execute("LISTEN update;")  # adds listen
 while True:
-    conn.poll()
+    with cursor_lock:
+        conn.poll()
     if len(conn.notifies) > 0:
         send_command()
-        conn.notifies.clear()
+        with cursor_lock:
+            conn.notifies.clear()
     time.sleep(0.01)

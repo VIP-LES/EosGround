@@ -74,7 +74,8 @@ Balloon.prototype.pull = function () {
         y = data.y_rotation;
         z = data.z_rotation;
         no_data = false;
-        if (data.temp == undefined) {
+        console.log(data.temperature  == undefined);
+        if (data.temperature == undefined) {
             no_data = true;
         }
     })
@@ -94,7 +95,7 @@ Balloon.prototype.pull = function () {
         num_sat = data.num_satellites;
         flight_state = data.flight_state;
         no_data = false;
-        if (data.lat == undefined) {
+        if (data.latitude == undefined) {
             no_data = true;
         }
     })
