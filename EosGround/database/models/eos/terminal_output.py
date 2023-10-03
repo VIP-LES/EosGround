@@ -5,7 +5,7 @@ from EosGround.database.models import TableBase
 from EosGround.database.models.eos import SCHEMA
 
 
-class Telemetry(TableBase):
+class TerminalOutput(TableBase):
     __tablename__ = 'terminal_output'
     __table_args__ = {'schema': SCHEMA}
 
