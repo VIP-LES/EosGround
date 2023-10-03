@@ -154,4 +154,20 @@ ALTER TABLE IF EXISTS eos_schema."position"
     ON DELETE NO ACTION
     NOT VALID;
 
+
+CREATE TABLE IF NOT EXISTS eos_schema.terminal_output
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    received_packet_id integer not NULL,
+    terminal_output text COLLATE pg_catalog."default",
+    CONSTRAINT terminal_output_pkey PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS eos_schema.terminal_output
+    ADD CONSTRAINT terminal_to_received_packet FOREIGN KEY (received_packet_id)
+    REFERENCES eos_schema.received_packets (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
 END;
