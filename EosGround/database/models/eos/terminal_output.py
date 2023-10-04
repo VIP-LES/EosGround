@@ -1,4 +1,4 @@
-from sqlalchemy import Identity, Integer, ForeignKey, TEXT
+from sqlalchemy import Identity, Integer, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from EosGround.database.models import TableBase
@@ -11,4 +11,5 @@ class TerminalOutput(TableBase):
 
     id: Mapped[int] = mapped_column(Integer, Identity(start=1), primary_key=True, init=False)
     received_packets_id: Mapped[bytes] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
-    terminal_output: Mapped[str] = mapped_column(TEXT)
+    transmit_table_id: Mapped[int] = mapped_column(ForeignKey("eos_schema.transmit_table.id"))
+    terminal_output: Mapped[str] = mapped_column(Text)
