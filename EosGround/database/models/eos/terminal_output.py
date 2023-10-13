@@ -13,3 +13,4 @@ class TerminalOutput(TableBase):
     received_packets_id: Mapped[bytes] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
     transmit_table_id: Mapped[int] = mapped_column(ForeignKey("eos_schema.transmit_table.id"))
     terminal_output: Mapped[str] = mapped_column(Text)
+
