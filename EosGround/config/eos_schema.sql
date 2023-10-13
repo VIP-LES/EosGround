@@ -177,3 +177,4 @@ ALTER TABLE IF EXISTS eos_schema.terminal_output
     NOT VALID;
 
 END;
+
