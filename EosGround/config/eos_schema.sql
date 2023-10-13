@@ -158,7 +158,7 @@ ALTER TABLE IF EXISTS eos_schema."position"
 CREATE TABLE IF NOT EXISTS eos_schema.terminal_output
 (
     id integer GENERATED ALWAYS AS IDENTITY,
-    received_packet_id integer,
+    received_packet_id integer UNIQUE,
     transmit_table_id integer UNIQUE,
     terminal_output text COLLATE pg_catalog."default",
     CONSTRAINT terminal_output_pkey PRIMARY KEY (id)
@@ -175,4 +175,5 @@ ALTER TABLE IF EXISTS eos_schema.terminal_output
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
+
 END;
