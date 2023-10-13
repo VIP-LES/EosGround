@@ -3,3 +3,4 @@ __pycache__/
 .DS_Store
 env/
 venv/
+ground-station-openmct/node_modules
