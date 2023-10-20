@@ -20,4 +20,4 @@ class TelemetrySerializer(serializers.ModelSerializer):
 class TestDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestData
-        fields = ['pk', 'rand_int']
+        fields = ['pk', 'packet', 'random_int']
