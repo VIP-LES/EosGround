@@ -4,3 +4,4 @@ __pycache__/
 env/
 venv/
 ground-station-openmct/node_modules
+eos-map/node_modules
