@@ -1,12 +1,14 @@
 from collections import namedtuple
 from sqlalchemy.orm import Query, Session
 
-from EosLib.packet.definitions import Type
+from EosLib.format.definitions import Type
 
 from EosGround.database.pipeline.lib.pipeline_base import PipelineBase
 from EosGround.database.models.eos.received_packets import ReceivedPackets
 from EosGround.database.models.eos.telemetry import Telemetry
-from EosLib.format.telemetry_data import TelemetryData
+
+
+from EosLib.format.formats.telemetry_data import TelemetryData
 
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 

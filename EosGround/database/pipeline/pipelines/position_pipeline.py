@@ -1,13 +1,14 @@
 from collections import namedtuple
 from sqlalchemy.orm import Query, Session
 
-from EosLib.packet.definitions import Type
+from EosLib.format.definitions import Type
 
 from EosGround.database.pipeline.lib.pipeline_base import PipelineBase
 from EosGround.database.models.eos.received_packets import ReceivedPackets
 
 from EosGround.database.models.eos.position import Position as Position_Model
-from EosLib.format.position import Position as Position_Format
+
+from EosLib.format.formats.position import Position as Position_Format
 
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 
@@ -29,7 +30,8 @@ class PositionPipeline(PipelineBase):
 
     def transform(self, session: Session, record: namedtuple):
         print(f"transforming position_pipeline row id={record.id}")
-        packet_data = Position_Format.decode_position(record.packet_body)
+
+        packet_data = Position_Format.decode(record.packet_body)
         packet_id = record.id
         time_stamp = packet_data.timestamp
         latitude = packet_data.latitude
