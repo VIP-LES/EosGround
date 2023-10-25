@@ -42,7 +42,7 @@ class PacketPipeline(PipelineBase):
         sequence_num = packet.transmit_header.send_seq_num
         send_time = packet.transmit_header.send_time
 
-        packet_body = packet.body
+        packet_body = packet.body.encode()
 
         received_time = record.received_time
 

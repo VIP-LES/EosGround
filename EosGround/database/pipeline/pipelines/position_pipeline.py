@@ -33,7 +33,7 @@ class PositionPipeline(PipelineBase):
 
         packet_data = Position_Format.decode(record.packet_body)
         packet_id = record.id
-        time_stamp = packet_data.timestamp
+        time_stamp = packet_data.gps_time
         latitude = packet_data.latitude
         longitude = packet_data.longitude
         altitude = packet_data.altitude

@@ -1,3 +1,4 @@
+from EosLib.format.formats.cutdown import CutDown
 from EosLib.packet.packet import Packet
 import EosLib.packet.definitions
 import EosLib.packet.packet
@@ -118,8 +119,6 @@ if __name__ == "__main__":
 
     new_data = Position(current_time, 23.4, 23.4, 23.4, 23.4, 5, FlightState.NOT_SET)
 
-    # encoded_new_data = new_data.encode()
-
     packet = Packet(new_data, position_data_header, position_transmit_header)
     wrapper = MessageWrapper(packet.encode())
     data_receive_callback(wrapper)
@@ -128,12 +127,12 @@ if __name__ == "__main__":
     telemetry_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.TELEMETRY_DATA)
     telemetry_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)
     telemetry = TelemetryData(
-        temperature=3.14,
-        pressure=23.32,
-        humidity=234.5,
-        x_rotation=0.234,
-        y_rotation=0.454,
-        z_rotation=2.2
+        temperature=1,
+        pressure=1,
+        humidity=1,
+        x_rotation=1,
+        y_rotation=1,
+        z_rotation=1
     )
     telemetry_packet = Packet(
         body=telemetry,
@@ -141,4 +140,18 @@ if __name__ == "__main__":
         transmit_header=telemetry_transmit_header
     )
     data_receive_callback(MessageWrapper(telemetry_packet.encode()))
+
+#     CutDown Response
+    cutdown_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.CUTDOWN)
+    cutdown_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)
+    cutdown = CutDown(21)
+    cutdown_packet = Packet(
+        body=cutdown,
+        data_header=cutdown_data_header,
+        transmit_header=cutdown_transmit_header
+    )
+    data_receive_callback(MessageWrapper(cutdown_packet.encode()))
+
+
+
 
