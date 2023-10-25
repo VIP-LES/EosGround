@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS eos_schema.transmit_table
     priority int NOT NULL,
     destination int NOT NULL,
     generate_time timestamp without time zone NOT NULL,
-    body character varying(255) NOT NULL,
+    body bytea NOT NULL,
     PRIMARY KEY (id)
 );
 

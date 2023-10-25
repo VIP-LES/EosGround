@@ -23,11 +23,14 @@ def send_ping_command():
     packet_destination = Device.MISC_RADIO_1
     packet_body = "PING 422"
 
+    #converted packet_body to binary
+    packet_body_bytes = packet_body.encode('utf-8')
+
     cursor.execute(
         """
         INSERT INTO eos_schema.transmit_table (packet_type, sender, priority, destination, generate_time, body)
-        VALUES (%s,%s,%s,%s,%s,%s)
-        """, (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body)
+        VALUES (%s,%s,%s,%s,%s,%b)
+        """, (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body_bytes)
     )
     conn.commit()
     print("Ping command sent")
@@ -43,11 +46,13 @@ def send_cutdown_command():
         packet_destination = Device.CUTDOWN
         packet_body = "DEWIT!"
 
+        packet_body_bytes = packet_body.encode('utf-8')
+
         cursor.execute(
             """
             INSERT INTO eos_schema.transmit_table (packet_type, sender, priority, destination, generate_time, body)
-            VALUES (%s,%s,%s,%s,%s,%s)
-            """, (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body)
+            VALUES (%s,%s,%s,%s,%s,%b)
+            """, (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body_bytes)
         )
         conn.commit()
         print("Cutdown command sent")
