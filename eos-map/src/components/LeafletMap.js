@@ -1,44 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
-import { defaultMarker } from './Icons';
+import { defaultMarker } from "./Icons";
 
 const LeafletMap = (props) => {
-	//Just centered on Atlanta by default
-	const center = [33.7488, -84.3877];
+  //Just centered on Atlanta by default
+  const center = [33.6488, -84.2877];
+  var posCounter = localStorage.getItem("les.posCounter") || 1;
 
-	const [ position, setPosition ] = useState(center);
+  const [position, setPosition] = useState(center);
 
-	useEffect(() => {
-		const interval = setInterval(() => {
-			console.log("This runs every second");
-			//Must ping server for position here
-		}, 1000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log(posCounter);
+      fetch(`http://127.0.0.1:8000/data/pos/${posCounter}/`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          if (data.detail) {
+            posCounter--;
+          } else {
+            setPosition([data.latitude, data.longitude]);
+            localStorage.setItem("les.posCounter", posCounter);
+            posCounter++;
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to fetch data from endpoint:", error);
+          posCounter--;
+        });
+    }, 1000);
 
-		return () => clearInterval(interval);
-	}, [position]);
+    return () => clearInterval(interval);
+  }, [position, posCounter]);
 
-
-	return (
-		<MapContainer
-			className='map'
-			center={center}
-			zoom={5}
-		>
-			<TileLayer
-				attribution='&amp;copy <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-			/>
-			<Marker 
-				position={position}
-				icon={defaultMarker}
-			>
-				<Popup>
-					A pretty CSS3 popup. <br /> Easily customizable.
-				</Popup>
-			</Marker>
-		</MapContainer>
-	)
+  return (
+    <MapContainer className="map" center={center} zoom={5}>
+      <TileLayer
+        attribution='&amp;copy <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={position} icon={defaultMarker}>
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
+      </Marker>
+    </MapContainer>
+  );
 };
 
 export default LeafletMap;
