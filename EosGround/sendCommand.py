@@ -32,7 +32,7 @@ def send_ping_command():
     cursor.execute(
         """
         INSERT INTO eos_schema.transmit_table (packet_type, sender, priority, destination, generate_time, body)
-        VALUES (%s,%s,%s,%s,%s,%b)
+        VALUES (%s,%s,%s,%s,%s,%s)
         """, (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body_bytes)
     )
     conn.commit()
