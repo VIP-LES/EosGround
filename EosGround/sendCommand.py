@@ -1,6 +1,8 @@
 import sys
 
-from EosLib.packet.definitions import Priority, Type
+from EosLib.packet.definitions import Priority
+from EosLib.format.definitions import Type
+
 from config.config import get_config
 from EosLib.device import Device
 
