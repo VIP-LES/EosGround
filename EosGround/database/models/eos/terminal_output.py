@@ -3,8 +3,6 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from EosGround.database.models import TableBase
 from EosGround.database.models.eos import SCHEMA
-from EosGround.database.models.eos import transmit
-
 from EosGround.database.models.eos.transmit import Transmit
 class TerminalOutput(TableBase):
     __tablename__ = 'terminal_output'

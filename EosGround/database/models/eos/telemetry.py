@@ -1,6 +1,5 @@
-from sqlalchemy import Identity, Integer, TIMESTAMP, ForeignKey, DOUBLE_PRECISION
+from sqlalchemy import Identity, Integer, ForeignKey, DOUBLE_PRECISION
 from sqlalchemy.orm import Mapped, mapped_column
-from datetime import datetime
 
 from EosGround.database.models import TableBase
 from EosGround.database.models.eos import SCHEMA

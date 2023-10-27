@@ -1,5 +1,6 @@
-from sqlalchemy import Identity, Integer, ForeignKey, Text, VARCHAR
+from sqlalchemy import Identity, Integer
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import BYTEA
 
 from EosGround.database.models import TableBase
 from EosGround.database.models.eos import SCHEMA
@@ -18,5 +19,5 @@ class Transmit(TableBase):
     priority: Mapped[int] = mapped_column()
     destination: Mapped[int] = mapped_column()
     generate_time: Mapped[int] = mapped_column()
-    body: Mapped[str] = mapped_column(VARCHAR)
+    body: Mapped[str] = mapped_column(BYTEA)
 
