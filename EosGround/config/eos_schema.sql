@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS eos_schema.transmit_table
     priority int NOT NULL,
     destination int NOT NULL,
     generate_time timestamp without time zone NOT NULL,
-    body character varying(255) NOT NULL,
+    body bytea NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -154,4 +154,27 @@ ALTER TABLE IF EXISTS eos_schema."position"
     ON DELETE NO ACTION
     NOT VALID;
 
+
+CREATE TABLE IF NOT EXISTS eos_schema.terminal_output
+(
+    id integer GENERATED ALWAYS AS IDENTITY,
+    received_packet_id integer,
+    transmit_table_id integer,
+    terminal_output text COLLATE pg_catalog."default",
+    CONSTRAINT terminal_output_pkey PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS eos_schema.terminal_output
+    ADD CONSTRAINT terminal_to_received_packet FOREIGN KEY (received_packet_id)
+    REFERENCES eos_schema.received_packets (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID,
+    ADD CONSTRAINT terminal_to_transmit_table FOREIGN KEY (transmit_table_id)
+    REFERENCES eos_schema.transmit_table (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
 END;
+
