@@ -6,46 +6,45 @@ import { defaultMarker } from "./Icons";
 const LeafletMap = (props) => {
   //Just centered on Atlanta by default
   const center = [33.6488, -84.2877];
-  var posCounter = localStorage.getItem("les.posCounter") || 1;
 
-  const [position, setPosition] = useState(center);
+  const [positions, setPositions] = useState([]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log(posCounter);
-      fetch(`http://127.0.0.1:8000/data/pos/${posCounter}/`)
+    const fetchPositions = () => {
+      fetch(`http://127.0.0.1:8000/data/pos/`)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          if (data.detail) {
-            posCounter--;
-          } else {
-            setPosition([data.latitude, data.longitude]);
-            localStorage.setItem("les.posCounter", posCounter);
-            posCounter++;
-          }
+          setPositions(data.map((pos) => [pos.latitude, pos.longitude]));
         })
         .catch((error) => {
           console.error("Failed to fetch data from endpoint:", error);
-          posCounter--;
         });
-    }, 1000);
+    };
+
+    fetchPositions();
+    const interval = setInterval(fetchPositions, 10000);
 
     return () => clearInterval(interval);
-  }, [position, posCounter]);
+  }, []);
 
   return (
-    <MapContainer className="map" center={center} zoom={5}>
-      <TileLayer
-        attribution='&amp;copy <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={position} icon={defaultMarker}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
-    </MapContainer>
+    <>
+      <MapContainer className="map" center={center} zoom={5}>
+        <TileLayer
+          attribution='&amp;copy <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {positions.map((position, index) => {
+          return (
+            <Marker key={index} position={position} icon={defaultMarker}>
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker>
+          );
+        })}
+      </MapContainer>
+    </>
   );
 };
 
