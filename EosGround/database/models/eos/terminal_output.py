@@ -9,7 +9,7 @@ class TerminalOutput(TableBase):
     __table_args__ = {'schema': SCHEMA}
 
     id: Mapped[int] = mapped_column(Integer, Identity(start=1), primary_key=True, init=False)
-    received_packet_id: Mapped[bytes] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
+    received_packet_id: Mapped[int] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
     transmit_table_id: Mapped[int] = mapped_column(ForeignKey(Transmit.id))
     terminal_output: Mapped[str] = mapped_column(Text)
 

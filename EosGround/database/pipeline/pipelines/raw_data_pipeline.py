@@ -48,7 +48,7 @@ class PacketPipeline(PipelineBase):
 
         # update the row from table ReceivedData to set processed=True
         record.processed = True
-        print("pre insert")
+        # print("pre insert")
 
         # insert a new row into table ReceivedPackets
         insert_row = ReceivedPackets(data_id=record.id,
@@ -63,5 +63,5 @@ class PacketPipeline(PipelineBase):
                                      packet_body=packet_body)
 
         session.add(insert_row)
-        print("after insert")
+        # print("after insert")
 

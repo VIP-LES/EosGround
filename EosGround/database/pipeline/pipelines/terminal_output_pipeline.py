@@ -1,4 +1,6 @@
 from collections import namedtuple
+
+from EosLib.packet import Packet
 from sqlalchemy.orm import Query, Session
 
 from EosLib.format.definitions import Type
@@ -8,6 +10,8 @@ from EosGround.database.models.eos.received_packets import ReceivedPackets
 
 from EosGround.database.models.eos.terminal_output import TerminalOutput
 from EosLib.format.formats.cutdown import CutDown
+from EosLib.format.formats.ping_format import Ping
+
 
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 
@@ -23,14 +27,19 @@ class TerminalPipeline(PipelineBase):
         return None
 
     def extract(self, session: Session) -> Query:
-
-        return session.query(ReceivedPackets).filter_by(packet_type=Type.CUTDOWN, processed=False)\
+        commands = [Type.CUTDOWN, Type.PING]
+        return session.query(ReceivedPackets).filter(ReceivedPackets.packet_type.in_(commands), ReceivedPackets.processed == False)\
             .order_by(ReceivedPackets.id)
 
     def transform(self, session: Session, record: namedtuple):
         print(f"transforming terminal_output_pipeline row id={record.id}")
         received_packet_id = record.id
-        packet_body = CutDown.decode(record.packet_body)
+
+        if record.packet_type == Type.CUTDOWN:
+            packet_body = CutDown.decode(record.packet_body)
+        elif record.packet_type == Type.PING:
+            packet_body = Ping.decode(record.packet_body)
+
         terminal_output = packet_body.to_terminal_output_string()
         transmit_table_id = None
         insert_row = TerminalOutput(

@@ -18,6 +18,6 @@ class Transmit(TableBase):
     sender: Mapped[int] = mapped_column()
     priority: Mapped[int] = mapped_column()
     destination: Mapped[int] = mapped_column()
-    generate_time: Mapped[int] = mapped_column()
+    generate_time: Mapped[datetime] = mapped_column(TIMESTAMP)
     body: Mapped[str] = mapped_column(BYTEA)
 
