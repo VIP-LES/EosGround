@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        background-color: #000;
+        color: #fff;
+        font-family: "Courier New", monospace;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      #terminal {
+        width: 80%;
+        max-width: 800px;
+        height: 400px;
+        margin: 20px auto;
+        background-color: #000;
+        border: 1px solid #fff;
+        overflow-y: scroll;
+        white-space: pre-wrap;
+      }
+      #terminal::-webkit-scrollbar {
+        display: none;
+      }
+      #input {
+        width: 100%;
+        background: #000;
+        border: none;
+        color: #fff;
+        outline: none;
+        caret-color: #fff;
+      }
+      #input-container {
+        text-align: center;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="terminal"></div>
+    <form id="terminalForm" action="#">
+      <div id="input-container">
+        <input id="input" name="command" placeholder="$" autocomplete="off" />
+      </div>
+    </form>
+    <script src="terminal_logic.js"></script>
+  </body>
+</html>

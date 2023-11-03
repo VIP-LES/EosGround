@@ -97,8 +97,8 @@ class TerminalOutput(models.Model):
     received_packet = models.ForeignKey(ReceivedPackets, on_delete=models.DO_NOTHING)
     transmit_table = models.ForeignKey(TransmitTable, on_delete=models.DO_NOTHING)
     terminal_output = models.CharField(max_length=255)
-
     class Meta:
         managed = False
         db_table = 'terminal_output'
+
 

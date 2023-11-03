@@ -1,6 +1,8 @@
 import sys
 
-from EosLib.packet.definitions import Priority, Type
+from EosLib.packet.definitions import Priority
+from EosLib.format.definitions import Type
+
 from config.config import get_config
 from EosLib.device import Device
 
@@ -9,7 +11,8 @@ import datetime
 
 import os
 
-conn_params = get_config(os.path.join('EosGround', 'config', 'database.ini'))  # gets config params
+conn_params = get_config(os.path.join('config', 'database.ini'))
+# conn_params = get_config(os.path.join('EosGround', 'config', 'database.ini'))  # gets config params
 conn = psycopg2.connect(**conn_params)  # gets connection object
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit
 cursor = conn.cursor()  # creates cursor
@@ -23,11 +26,14 @@ def send_ping_command():
     packet_destination = Device.MISC_RADIO_1
     packet_body = "PING 422"
 
+    #converted packet_body to binary
+    packet_body_bytes = packet_body.encode()
+
     cursor.execute(
         """
         INSERT INTO eos_schema.transmit_table (packet_type, sender, priority, destination, generate_time, body)
         VALUES (%s,%s,%s,%s,%s,%s)
-        """, (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body)
+        """, (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body_bytes)
     )
     conn.commit()
     print("Ping command sent")
@@ -43,11 +49,13 @@ def send_cutdown_command():
         packet_destination = Device.CUTDOWN
         packet_body = "DEWIT!"
 
+        packet_body_bytes = packet_body.encode()
+
         cursor.execute(
             """
             INSERT INTO eos_schema.transmit_table (packet_type, sender, priority, destination, generate_time, body)
             VALUES (%s,%s,%s,%s,%s,%s)
-            """, (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body)
+            """, (packet_type, packet_sender, packet_priority, packet_destination, packet_generate_time, packet_body_bytes)
         )
         conn.commit()
         print("Cutdown command sent")
