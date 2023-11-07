@@ -11,6 +11,7 @@ from EosGround.database.models.eos.received_packets import ReceivedPackets
 from EosGround.database.models.eos.terminal_output import TerminalOutput
 from EosLib.format.formats.cutdown import CutDown
 from EosLib.format.formats.ping_format import Ping
+from EosLib.format.decode_factory import decode_factory
 
 
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
@@ -35,10 +36,7 @@ class TerminalPipeline(PipelineBase):
         print(f"transforming terminal_output_pipeline row id={record.id}")
         received_packet_id = record.id
 
-        if record.packet_type == Type.CUTDOWN:
-            packet_body = CutDown.decode(record.packet_body)
-        elif record.packet_type == Type.PING:
-            packet_body = Ping.decode(record.packet_body)
+        packet_body = decode_factory.decode(record.packet_type, record.packet_body)
 
         terminal_output = packet_body.to_terminal_output_string()
         transmit_table_id = None
