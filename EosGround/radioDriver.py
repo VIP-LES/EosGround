@@ -15,6 +15,7 @@ from EosLib.packet.packet import Packet
 import EosLib.packet.definitions
 import EosLib.packet.packet
 import EosLib.packet.transmit_header
+from EosLib.format.decode_factory import decode_factory
 
 from config.config import get_config
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
@@ -90,10 +91,12 @@ def send_command():
 
             data_header.destination = packet_destination  # added externally
 
+            packet_body = decode_factory.decode(packet_type, packet_body)
+
             transmit_header = EosLib.packet.transmit_header.TransmitHeader(sequence_number)
             transmit_header.send_time = datetime.datetime.now()
 
-            packet = Packet(data_header=data_header, body=packet_body.encode())  # transmit packet
+            packet = Packet(data_header=data_header, body=packet_body)  # transmit packet
             packet.transmit_header = transmit_header
 
             device.send_data_async(remote, packet.encode(), transmit_options=TransmitOptions.DISABLE_ACK.value)
