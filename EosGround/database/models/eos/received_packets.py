@@ -7,7 +7,6 @@ from sqlalchemy.dialects.postgresql import BYTEA
 from EosGround.database.models import TableBase
 from EosGround.database.models.eos import SCHEMA
 
-
 class ReceivedPackets(TableBase):
     __tablename__ = 'received_packets'
     __table_args__ = {'schema': SCHEMA}
