@@ -50,26 +50,24 @@ def transmitTableInsert(request):
         command = terminal_input['input']
         ack = terminal_input['ack']
         transmitTable = TransmitTable()
-        transmitTable.time_sent = datetime.now()
+        # transmitTable.time_sent = datetime.now()
         transmitTable.sender = Device.GROUND_STATION_1
         transmitTable.priority = Priority.DATA
         transmitTable.generate_time = datetime.now()
         if command == "cutdown":
-            cutdown = CutDown(ack)
-            cutdown_packet = Packet(cutdown, DataHeader(Device.GROUND_STATION_1, Type.CUTDOWN, Priority.DATA))
-            cutdown_packet_binary = cutdown_packet.encode()
+            cutdown_body = CutDown(ack)
+            cutdown_body_bytes = cutdown_body.encode()
             transmitTable.packet_type = Type.CUTDOWN
             transmitTable.destination = Device.CUTDOWN
-            transmitTable.body = cutdown_packet_binary
+            transmitTable.body = cutdown_body_bytes
             transmitTable.save()
             return Response({'message': 'Cutdown command received and processed'}, status=status.HTTP_200_OK)
         elif command == "ping":
-            ping = Ping(True, ack)
-            ping_packet = Packet(ping, DataHeader(Device.GROUND_STATION_1, Type.PING, Priority.DATA))
-            ping_packet_binary = ping_packet.encode()
+            ping_body = Ping(True, ack)
+            ping_packet_bytes = ping_body.encode()
             transmitTable.packet_type = Type.PING
             transmitTable.destination = Device.MISC_RADIO_1
-            transmitTable.body = ping_packet_binary
+            transmitTable.body = ping_packet_bytes
             transmitTable.save()
             return Response({'message': 'Ping command received and processed'}, status=status.HTTP_200_OK)
 
