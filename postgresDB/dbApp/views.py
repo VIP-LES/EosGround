@@ -10,15 +10,15 @@ from .serializers import PositionSerializer, TelemetrySerializer, TestDataSerial
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
-from EosLib.device import Device
-#from EosLib.format import Type
+
 from EosLib.format.definitions import Type
 from EosLib.format.formats.cutdown import CutDown
 from EosLib.format.formats.ping_format import Ping
+from EosLib.device import Device
 from EosLib.packet import Packet
 from EosLib.packet.data_header import DataHeader
 from EosLib.packet.definitions import Priority
-import datetime
+from datetime import datetime
 
 # API endpoint that allows data to be viewed.
 
@@ -37,39 +37,43 @@ class TestDataList(generics.RetrieveAPIView):
     queryset = TestData.objects.all()
     serializer_class = TestDataSerializer
 
+
 class TerminalOutputList(generics.ListAPIView):
     queryset = TerminalOutput.objects.all()
     serializer_class = TerminalOutputSerializer
 
 
 @api_view(['POST'])
-def transmitTableInsert(request, ack: int=0):
+def transmitTableInsert(request):
     if request.method == 'POST':
-        #input = request.POST.get('input')
-        form = TerminalInputForm(request.POST)
-        if form.is_valid():
-            input = form.cleaned_data['command']
-            if input.startswith('cut'):
-                cutdown = CutDown(ack)
-                cutdown_packet = Packet(cutdown, DataHeader(Device.GROUND_STATION_1, Type.CUTDOWN, Priority.TELEMETRY))
-                cutdown_packet_binary = cutdown_packet.encode()
-                transmitTable = TransmitTable()
-                transmitTable.body = cutdown_packet_binary
-                transmitTable.save()
-                return Response({'message': 'Ping command received and processed'}, status=status.HTTP_200_OK)
-            elif input.startswith('ping'):
-                ping = Ping(True, ack)
-                ping_packet = Packet(ping, DataHeader(Device.GROUND_STATION_1, Type.PING, Priority.TELEMETRY))
-                ping_packet_binary = ping_packet.encode()
-                transmitTable = TransmitTable()
-                transmitTable.body = ping_packet_binary
-                transmitTable.save()
-                return Response({'message': 'Ping command received and processed'}, status=status.HTTP_200_OK)
+        terminal_input = json.loads(request.body)
+        command = terminal_input['input']
+        ack = terminal_input['ack']
+        transmitTable = TransmitTable()
+        transmitTable.time_sent = datetime.now()
+        transmitTable.sender = Device.GROUND_STATION_1
+        transmitTable.priority = Priority.DATA
+        transmitTable.generate_time = datetime.now()
+        if command == "cutdown":
+            cutdown = CutDown(ack)
+            cutdown_packet = Packet(cutdown, DataHeader(Device.GROUND_STATION_1, Type.CUTDOWN, Priority.DATA))
+            cutdown_packet_binary = cutdown_packet.encode()
+            transmitTable.packet_type = Type.CUTDOWN
+            transmitTable.destination = Device.CUTDOWN
+            transmitTable.body = cutdown_packet_binary
+            transmitTable.save()
+            return Response({'message': 'Cutdown command received and processed'}, status=status.HTTP_200_OK)
+        elif command == "ping":
+            ping = Ping(True, ack)
+            ping_packet = Packet(ping, DataHeader(Device.GROUND_STATION_1, Type.PING, Priority.DATA))
+            ping_packet_binary = ping_packet.encode()
+            transmitTable.packet_type = Type.PING
+            transmitTable.destination = Device.MISC_RADIO_1
+            transmitTable.body = ping_packet_binary
+            transmitTable.save()
+            return Response({'message': 'Ping command received and processed'}, status=status.HTTP_200_OK)
 
-            else:
-                 return Response({'error': 'Invalid command'}, status=status.HTTP_400_BAD_REQUEST)
-
-    return Response({'Hello': 'Invalid input or method'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Invalid input or method'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
