@@ -5,7 +5,7 @@ from datetime import datetime
 from EosGround.database.models import TableBase
 from EosGround.database.models.eos import SCHEMA
 
-from EosLib.format.position import FlightState
+from EosLib.format.formats.position import FlightState
 
 # Creates a model of the Position table and maps python types to their PostgreSQL counterparts
 #describes what the table looks like in code

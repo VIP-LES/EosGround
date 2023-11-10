@@ -20,7 +20,7 @@ class PacketPipeline(PipelineBase):
     #notify message to start the next pipeline
     @staticmethod
     def get_notify_channel() -> str | None:
-        return "position_telemetry_pipeline"
+        return "post_packet_pipeline"
 
     # takes the data from the source table and filters by records that
     # have not been processed
@@ -31,6 +31,7 @@ class PacketPipeline(PipelineBase):
     # places the attributes of the packet into ReceivedPackets table
     def transform(self, session: Session, record: namedtuple):
         print(f"transforming raw_data_pipeline row id={record.id}")
+
         packet = Packet.decode(record.raw_bytes)
         data_type = packet.data_header.data_type
         sender = packet.data_header.sender
@@ -41,12 +42,13 @@ class PacketPipeline(PipelineBase):
         sequence_num = packet.transmit_header.send_seq_num
         send_time = packet.transmit_header.send_time
 
-        packet_body = packet.body
+        packet_body = packet.body.encode()
 
         received_time = record.received_time
 
         # update the row from table ReceivedData to set processed=True
         record.processed = True
+        # print("pre insert")
 
         # insert a new row into table ReceivedPackets
         insert_row = ReceivedPackets(data_id=record.id,
@@ -61,3 +63,5 @@ class PacketPipeline(PipelineBase):
                                      packet_body=packet_body)
 
         session.add(insert_row)
+        # print("after insert")
+
