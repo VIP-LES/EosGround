@@ -38,7 +38,7 @@ class TestDataList(generics.RetrieveAPIView):
     serializer_class = TestDataSerializer
 
 
-class TerminalOutputList(generics.ListAPIView):
+class TerminalOutputList(generics.RetrieveAPIView):
     queryset = TerminalOutput.objects.all()
     serializer_class = TerminalOutputSerializer
 
@@ -47,10 +47,9 @@ class TerminalOutputList(generics.ListAPIView):
 def transmitTableInsert(request):
     if request.method == 'POST':
         terminal_input = json.loads(request.body)
-        command = terminal_input['input']
-        ack = terminal_input['ack']
+        command = terminal_input["input"]
+        ack = terminal_input["ack"]
         transmitTable = TransmitTable()
-        # transmitTable.time_sent = datetime.now()
         transmitTable.sender = Device.GROUND_STATION_1
         transmitTable.priority = Priority.DATA
         transmitTable.generate_time = datetime.now()
@@ -61,7 +60,7 @@ def transmitTableInsert(request):
             transmitTable.destination = Device.CUTDOWN
             transmitTable.body = cutdown_body_bytes
             transmitTable.save()
-            return Response({'message': 'Cutdown command received and processed'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Cutdown command sent ', 'ack': ack}, status=status.HTTP_200_OK)
         elif command == "ping":
             ping_body = Ping(True, ack)
             ping_packet_bytes = ping_body.encode()
@@ -69,7 +68,7 @@ def transmitTableInsert(request):
             transmitTable.destination = Device.MISC_RADIO_1
             transmitTable.body = ping_packet_bytes
             transmitTable.save()
-            return Response({'message': 'Ping command received and processed'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Ping command sent ', 'ack': ack}, status=status.HTTP_200_OK)
 
         return Response({'message': 'Invalid input or method'}, status=status.HTTP_400_BAD_REQUEST)
 

@@ -25,4 +25,4 @@ class TestDataSerializer(serializers.ModelSerializer):
 class TerminalOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = TerminalOutput
-        fields = ['received_packet_id', 'transmit_table_id', 'terminal_output']
+        fields = ['pk', 'received_packet_id', 'transmit_table_id', 'terminal_output']

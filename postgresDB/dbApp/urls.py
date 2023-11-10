@@ -8,6 +8,6 @@ urlpatterns = [
     path('pos/<int:pk>/', PositionList.as_view(), name='retrieve-position'),
     path('tel/<int:pk>/', TelemetryList.as_view(), name='retrieve-telemetry'),
     path('test/<int:pk>/', TestDataList.as_view(), name='retrieve-testdata'),
-    path('terminal/', TerminalOutputList.as_view(), name='terminal-output'),
-    path('insertTransmitTable/', transmitTableInsert, name='transmit-table-insert')
+    path('terminalOutput/<int:pk>/', TerminalOutputList.as_view(), name='terminal-output'),
+    path('insertTransmitTable/', transmitTableInsert, name='transmit-table-insert'),
 ]
