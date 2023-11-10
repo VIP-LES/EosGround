@@ -49,7 +49,7 @@ class ReceivedPackets(models.Model):
 
 class Telemetry(models.Model):
     packet = models.ForeignKey(ReceivedPackets, models.DO_NOTHING)
-    timestamp = models.DateTimeField(blank=True, null=True)
+    #timestamp = models.DateTimeField(blank=True, null=True)
     temperature = models.FloatField(blank=True, null=True)
     pressure = models.FloatField(blank=True, null=True)
     humidity = models.FloatField(blank=True, null=True)

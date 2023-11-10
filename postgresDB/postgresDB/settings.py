@@ -88,7 +88,7 @@ DATABASES = {
         },
         'NAME': 'eos_db',
         'USER': 'postgres',
-        'PASSWORD': 'password',
+        'PASSWORD': '1234',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }

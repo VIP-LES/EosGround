@@ -6,6 +6,7 @@ def get_config(config_file_path: str) -> dict:
     config_parser = ConfigParser()
     config_parser.read(config_file_path)
     try:
+        print(config_file_path)
         config_params = config_parser.items(section)
     except NoSectionError as err:
         print(f"*** ERROR: either the `config_file_path` is not correct or the config file doesn't have a"

@@ -15,6 +15,9 @@ from EosLib.packet.packet import Packet
 import EosLib.packet.definitions
 import EosLib.packet.packet
 import EosLib.packet.transmit_header
+from EosLib.format.definitions import Type
+
+from EosLib.format.formats.cutdown import CutDown
 from EosLib.format.decode_factory import decode_factory
 
 from config.config import get_config
@@ -31,7 +34,7 @@ cursor_lock = Lock()
 print("connected to database")
 
 # sets up digi
-PORT = "/dev/cu.usbserial-FT5PFML62"
+PORT = "COM6"
 # aryan's port:
 # PORT = "/dev/cu.usbserial-FT5PG7VE2"
 #PORT = "/dev/cu.usbserial-FT5PFML62"
@@ -91,7 +94,7 @@ def send_command():
 
             data_header.destination = packet_destination  # added externally
 
-            packet_body = decode_factory.decode(packet_type, packet_body)
+            packet_body = decode_factory.decode(packet_type, packet_body.tobytes())
 
             transmit_header = EosLib.packet.transmit_header.TransmitHeader(sequence_number)
             transmit_header.send_time = datetime.datetime.now()
@@ -123,6 +126,7 @@ while True:
     with cursor_lock:
         conn.poll()
     if len(conn.notifies) > 0:
+        print('transmitted')
         send_command()
         with cursor_lock:
             conn.notifies.clear()
