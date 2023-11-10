@@ -113,16 +113,16 @@ class MessageWrapper:
 
 if __name__ == "__main__":
     # POSITION
-    # position_data_header = EosLib.packet.data_header.DataHeader(Device.O3, Type.POSITION)
-    # position_transmit_header = EosLib.packet.transmit_header.TransmitHeader(2)
-    #
-    # current_time = datetime.now()
-    #
-    # new_data = Position(current_time, 23.4, 23.4, 23.4, 23.4, 5, FlightState.NOT_SET)
-    #
-    # packet = Packet(new_data, position_data_header, position_transmit_header)
-    # wrapper = MessageWrapper(packet.encode())
-    # data_receive_callback(wrapper)
+    position_data_header = EosLib.packet.data_header.DataHeader(Device.O3, Type.POSITION)
+    position_transmit_header = EosLib.packet.transmit_header.TransmitHeader(2)
+
+    current_time = datetime.now()
+
+    new_data = Position(current_time, 1, 1, 1, 1, 1, FlightState.NOT_SET)
+
+    packet = Packet(new_data, position_data_header, position_transmit_header)
+    wrapper = MessageWrapper(packet.encode())
+    data_receive_callback(wrapper)
 
     # TELEMETRY
     # telemetry_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.TELEMETRY_DATA)
@@ -154,14 +154,14 @@ if __name__ == "__main__":
 #     data_receive_callback(MessageWrapper(cutdown_packet.encode()))
 
     # EFIELD
-    efield_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.E_FIELD)
-    efield_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)
-    efield = EField(-1,-1.2,1.2)
-    efield_packet = Packet(
-        body=efield,
-        data_header=efield_data_header,
-        transmit_header=efield_transmit_header
-    )
-    data_receive_callback(MessageWrapper(efield_packet.encode()))
+    # efield_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.E_FIELD)
+    # efield_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)
+    # efield = EField(-1,-1.2,1.2)
+    # efield_packet = Packet(
+    #     body=efield,
+    #     data_header=efield_data_header,
+    #     transmit_header=efield_transmit_header
+    # )
+    # data_receive_callback(MessageWrapper(efield_packet.encode()))
 
 
