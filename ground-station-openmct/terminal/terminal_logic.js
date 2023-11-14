@@ -34,7 +34,7 @@ form.addEventListener("submit", function (event) {
 
     if (command === "clear") {
       terminal.innerHTML = "";
-    } else if (command == "cutdown" || command == "ping") {
+    } else if (command == "cutdown" || command == "ping" || command == 'valve') {
         terminal.innerHTML += `$ ${fullCommand}\n`;
         let response = fetch('http://127.0.0.1:8000/data/insertTransmitTable/', {
             method: 'POST',
