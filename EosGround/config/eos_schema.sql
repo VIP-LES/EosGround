@@ -175,5 +175,24 @@ ALTER TABLE IF EXISTS eos_schema.terminal_output
     ON DELETE NO ACTION
     NOT VALID;
 
+
+CREATE TABLE IF NOT EXISTS eos_schema.e_field
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    packet_id integer NOT NULL,
+    a_voltage double precision,
+    b_voltage double precision,
+    c_voltage double precision,
+    CONSTRAINT e_field_pkey PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS eos_schema.e_field
+    ADD CONSTRAINT e_field_to_received_packet FOREIGN KEY (packet_id)
+    REFERENCES eos_schema.received_packets (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+
 END;
 

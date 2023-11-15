@@ -16,6 +16,7 @@ from EosLib.format.definitions import Type
 from EosLib.format.formats.telemetry_data import TelemetryData
 from EosLib.format.formats.position import Position, FlightState
 # from EosLib.format.position import Position
+from EosLib.format.formats.e_field import EField
 
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 
@@ -117,41 +118,50 @@ if __name__ == "__main__":
 
     current_time = datetime.now()
 
-    new_data = Position(current_time, 23.4, 23.4, 23.4, 23.4, 5, FlightState.NOT_SET)
+    new_data = Position(current_time, 1, 1, 1, 1, 1, FlightState.NOT_SET)
 
     packet = Packet(new_data, position_data_header, position_transmit_header)
     wrapper = MessageWrapper(packet.encode())
     data_receive_callback(wrapper)
 
     # TELEMETRY
-    telemetry_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.TELEMETRY_DATA)
-    telemetry_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)
-    telemetry = TelemetryData(
-        temperature=1,
-        pressure=1,
-        humidity=1,
-        x_rotation=1,
-        y_rotation=1,
-        z_rotation=1
-    )
-    telemetry_packet = Packet(
-        body=telemetry,
-        data_header=telemetry_data_header,
-        transmit_header=telemetry_transmit_header
-    )
-    data_receive_callback(MessageWrapper(telemetry_packet.encode()))
+    # telemetry_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.TELEMETRY_DATA)
+    # telemetry_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)
+    # telemetry = TelemetryData(
+    #     temperature=1,
+    #     pressure=1,
+    #     humidity=1,
+    #     x_rotation=1,
+    #     y_rotation=1,
+    #     z_rotation=1
+    # )
+    # telemetry_packet = Packet(
+    #     body=telemetry,
+    #     data_header=telemetry_data_header,
+    #     transmit_header=telemetry_transmit_header
+    # )
+    # data_receive_callback(MessageWrapper(telemetry_packet.encode()))
 
 #     CutDown Response
-    cutdown_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.CUTDOWN)
-    cutdown_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)
-    cutdown = CutDown(21)
-    cutdown_packet = Packet(
-        body=cutdown,
-        data_header=cutdown_data_header,
-        transmit_header=cutdown_transmit_header
-    )
-    data_receive_callback(MessageWrapper(cutdown_packet.encode()))
+#     cutdown_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.CUTDOWN)
+#     cutdown_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)
+#     cutdown = CutDown(21)
+#     cutdown_packet = Packet(
+#         body=cutdown,
+#         data_header=cutdown_data_header,
+#         transmit_header=cutdown_transmit_header
+#     )
+#     data_receive_callback(MessageWrapper(cutdown_packet.encode()))
 
-
+    # EFIELD
+    # efield_data_header = EosLib.packet.data_header.DataHeader(Device.MISC_1, Type.E_FIELD)
+    # efield_transmit_header = EosLib.packet.transmit_header.TransmitHeader(3)
+    # efield = EField(-1,-1.2,1.2)
+    # efield_packet = Packet(
+    #     body=efield,
+    #     data_header=efield_data_header,
+    #     transmit_header=efield_transmit_header
+    # )
+    # data_receive_callback(MessageWrapper(efield_packet.encode()))
 
 
