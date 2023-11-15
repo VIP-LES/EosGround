@@ -26,34 +26,33 @@ setInterval(function() {
 form.addEventListener("submit", function (event) {
     event.preventDefault();
     const fullCommand = input.value; //stores the user input in fullCommand
-    const commandParts = fullCommand.split(' ');
-
-    const command = commandParts[0]; // Extracts the command (first word)
-    const ack = parseInt(commandParts[1]); // Extracts the number (second word) and converts it to an int
+    // const commandParts = fullCommand.split(' ');
+    // const command = commandParts[0]; // Extracts the command (first word)
+    // const ack = parseInt(commandParts[1]); // Extracts the number (second word) and converts it to an int
     input.value = "";
 
-    if (command === "clear") {
+    if (fullCommand === "clear") {
       terminal.innerHTML = "";
-    } else if (command == "cutdown" || command == "ping" || command == 'valve') {
-        terminal.innerHTML += `$ ${fullCommand}\n`;
-        let response = fetch('http://127.0.0.1:8000/data/insertTransmitTable/', {
-            method: 'POST',
-            body: JSON.stringify({"input": command, "ack": ack})
-        })
-        .then((response) => response.json())
-        .then((response) => {
-          console.log(response);
-          return response;
-        })
-        .then((response) => {
-          terminal.innerHTML += `$ ${response.message + response.ack}\n`;
-        })
-        .catch(error => {
-          console.error('Failed to fetch data from endpoint:', error);
-        })
-    } else {
-      terminal.innerHTML += `Command not found: ${command}\n`;
     }
+
+    terminal.innerHTML += `$ ${fullCommand}\n`;
+    let response = fetch('http://127.0.0.1:8000/data/insertTransmitTable/', {
+        method: 'POST',
+        body: JSON.stringify({"input": fullCommand})
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      console.log(response);
+      return response;
+    })
+    .then((response) => {
+        const responseText = response.ack !== undefined ? `${response.message}${response.ack}` : response.message;
+        terminal.innerHTML += `$ ${response.message}\n`;
+    })
+    .catch(error => {
+      console.error('Failed to fetch data from endpoint:', error);
+    })
+
 
     terminal.scrollTop = terminal.scrollHeight - terminal.clientHeight;
 });

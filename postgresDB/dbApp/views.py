@@ -52,13 +52,27 @@ class TerminalOutputList(generics.RetrieveAPIView):
 def transmitTableInsert(request):
     try:
         if request.method == 'POST':
-            terminal_input = json.loads(request.body)
-            command = terminal_input["input"]
-            ack = terminal_input["ack"]
+            body_unicode = request.body.decode('utf-8')
+            terminal_input = json.loads(body_unicode)
+            full_command = terminal_input["input"]
+            command_parts = full_command.split(' ')
+            command = command_parts[0]
+            ack = int(command_parts[1]) if len(command_parts) > 1 else None
+
             transmitTable = TransmitTable()
             transmitTable.sender = Device.GROUND_STATION_1
             transmitTable.priority = Priority.DATA
             transmitTable.generate_time = datetime.now()
+
+            valid_commands = {"cutdown", "ping", "valve", "clear"}
+            if command not in valid_commands:
+                return Response({'message': 'Invalid command'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if ack is None and command != "clear":
+                return Response({'message': 'Ack is missing'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if command == "clear":
+                return Response({'message': 'Clear command received, no action taken'}, status=status.HTTP_200_OK)
 
             if command == "cutdown":
                 cutdown_body = CutDown(ack)
@@ -101,4 +115,4 @@ def transmitTableInsert(request):
         return Response({'message': f'Invalid JSON format: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         # Handle other unexpected errors
-        return Response({'message': f'An error occurred: missing ack '}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': f'An error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
