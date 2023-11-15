@@ -43,8 +43,9 @@ form.addEventListener("submit", function (event) {
       return response;
     })
     .then((response) => {
-        const responseText = response.ack !== undefined ? `${response.message}${response.ack}` : response.message;
-        terminal.innerHTML += `$ ${response.message}\n`;
+        if (response.ack !== undefined) {
+            terminal.innerHTML += `$ ${response.message + response.ack}\n`;
+        }
     })
     .catch(error => {
       console.error('Failed to fetch data from endpoint:', error);
