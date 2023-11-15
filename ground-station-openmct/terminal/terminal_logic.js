@@ -45,6 +45,8 @@ form.addEventListener("submit", function (event) {
     .then((response) => {
         if (response.ack !== undefined) {
             terminal.innerHTML += `$ ${response.message + response.ack}\n`;
+        } else {
+            terminal.innerHTML += `$ ${response.message}\n`;
         }
     })
     .catch(error => {
