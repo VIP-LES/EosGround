@@ -26,9 +26,6 @@ setInterval(function() {
 form.addEventListener("submit", function (event) {
     event.preventDefault();
     const fullCommand = input.value; //stores the user input in fullCommand
-    // const commandParts = fullCommand.split(' ');
-    // const command = commandParts[0]; // Extracts the command (first word)
-    // const ack = parseInt(commandParts[1]); // Extracts the number (second word) and converts it to an int
     input.value = "";
 
     if (fullCommand === "clear") {
