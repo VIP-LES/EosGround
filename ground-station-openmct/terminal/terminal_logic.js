@@ -17,7 +17,7 @@ setInterval(function() {
 
     console.log(output)
     if (output) {
-        terminal.innerHTML += `$ ${output}\n`;
+        terminal.innerText += `$ ${output}\n`;
         output_pk++;
     }
 }, 3000);
@@ -29,10 +29,10 @@ form.addEventListener("submit", function (event) {
     input.value = "";
 
     if (fullCommand === "clear") {
-      terminal.innerHTML = "";
+      terminal.innerText = "";
     }
 
-    terminal.innerHTML += `$ ${fullCommand}\n`;
+    terminal.innerText += `$ ${fullCommand}\n`;
     let response = fetch('http://127.0.0.1:8000/data/insertTransmitTable/', {
         method: 'POST',
         body: JSON.stringify({"input": fullCommand})
@@ -44,9 +44,9 @@ form.addEventListener("submit", function (event) {
     })
     .then((response) => {
         if (response.ack !== undefined) {
-            terminal.innerHTML += `$ ${response.message + response.ack}\n`;
+            terminal.innerText += `$ ${response.message + response.ack}\n`;
         } else {
-            terminal.innerHTML += `$ ${response.message}\n`;
+            terminal.innerText += `$ ${response.message}\n`;
         }
     })
     .catch(error => {
