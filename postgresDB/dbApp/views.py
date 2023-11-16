@@ -31,6 +31,10 @@ cursor = connection.cursor()
 class PositionList(generics.RetrieveAPIView):
     queryset = Position.objects.all()
     serializer_class = PositionSerializer
+    
+class AllPositions(generics.ListAPIView):
+    queryset = Position.objects.all()
+    serializer_class = PositionSerializer
 
 
 class TelemetryList(generics.RetrieveAPIView):

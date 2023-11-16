@@ -20,5 +20,8 @@
     "http-server": "latest",
     "node-fetch": "^2.6.7",
     "openmct": "latest"
+  },
+  "devDependencies": {
+    "openmct-legacy-plugin": "github:nasa/openmct-legacy-plugin"
   }
 }
