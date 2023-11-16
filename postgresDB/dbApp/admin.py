@@ -1,6 +1,6 @@
 from django.contrib import admin
 
 # Register your models here.
-#from dbApp.models import RawData
+from .models import TerminalOutput
 # Register your models here.
-#admin.site.register(RawData)
+admin.site.register(TerminalOutput)
