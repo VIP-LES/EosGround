@@ -20,7 +20,7 @@ setInterval(function() {
         terminal.innerText += `$ ${output}\n`;
         output_pk++;
     }
-}, 3000);
+}, 1000);
 
 
 form.addEventListener("submit", function (event) {
