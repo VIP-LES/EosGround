@@ -17,7 +17,6 @@ from rest_framework.response import Response
 from EosLib.format.definitions import Type
 from EosLib.format.formats.cutdown import CutDown
 from EosLib.format.formats.ping_format import Ping
-from EosLib.format.formats.downlink_header_format import DownlinkCommandFormat as Downlink
 from EosLib.device import Device
 from EosLib.packet import Packet
 from EosLib.packet.data_header import DataHeader
@@ -109,17 +108,6 @@ def transmitTableInsert(request):
                 cursor.execute("NOTIFY update;")
                 connection.commit()
                 return Response({'message': 'Valve command sent ', 'ack': ack}, status=status.HTTP_200_OK)
-            elif command == "downlink":
-                downlink_body = Downlink(ack)
-                downlink_body_bytes = downlink_body.encode()
-                transmitTable.packet_type = Type.DOWNLINK_COMMAND
-                transmitTable.destination = Device.DOWNLINK
-                transmitTable.body = downlink_body_bytes
-                transmitTable.save()
-                cursor.execute("NOTIFY update;")
-                connection.commit()
-                return Response({'message': 'Downlink command sent ', 'ack': ack}, status=status.HTTP_200_OK)
-
 
             return Response({'message': 'Invalid input or method'}, status=status.HTTP_400_BAD_REQUEST)
 
