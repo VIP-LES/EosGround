@@ -193,6 +193,22 @@ ALTER TABLE IF EXISTS eos_schema.e_field
     ON DELETE NO ACTION
     NOT VALID;
 
+CREATE TABLE IF NOT EXISTS eos_schema.downlink_command
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    packet_id integer NOT NULL,
+    file_id integer NULL,
+    num_chunks integer NOT NULL,
+    command_type integer NOT NULL,
+    missing_chunks integer[] NULL
+);
+
+ALTER TABLE IF EXISTS eos_schema.downlink_command
+    ADD CONSTRAINT downlink_command_to_received_packet FOREIGN KEY (packet_id)
+    REFERENCES eos_schema.received_packets (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
 
 END;
 
