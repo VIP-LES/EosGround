@@ -1,3 +1,4 @@
+import traceback
 from collections import namedtuple
 from sqlalchemy.orm import Query, Session
 
@@ -64,6 +65,8 @@ class PacketPipeline(PipelineBase):
                                          packet_body=packet_body)
 
             session.add(insert_row)
-        except:
+        except Exception as e:
+            record.processed = True
             record.dropped = True
-
+            print(record.dropped)
+            print(f"Exception occurred while transforming packet, dropping row: {e}\n{traceback.format_exc()}")
