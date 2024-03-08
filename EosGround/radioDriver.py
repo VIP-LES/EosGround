@@ -34,10 +34,11 @@ cursor_lock = Lock()
 print("connected to database")
 
 # sets up digi
-PORT = "COM6"
+# PORT = "COM6"
 # aryan's port:
 # PORT = "/dev/cu.usbserial-FT5PG7VE2"
-#PORT = "/dev/cu.usbserial-FT5PFML62"
+#panya's port:
+PORT = "/dev/cu.usbserial-FT5PFML62"
 device = XBeeDevice(PORT, 9600)
 device.open()
 print("connected to xbee")
