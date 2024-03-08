@@ -32,34 +32,38 @@ class PacketPipeline(PipelineBase):
     def transform(self, session: Session, record: namedtuple):
         print(f"transforming raw_data_pipeline row id={record.id}")
 
-        packet = Packet.decode(record.raw_bytes)
-        data_type = packet.data_header.data_type
-        sender = packet.data_header.sender
-        priority = packet.data_header.priority
-        destination = packet.data_header.destination
-        generate_time = packet.data_header.generate_time
+        try:
+            packet = Packet.decode(record.raw_bytes)
 
-        sequence_num = packet.transmit_header.send_seq_num
-        send_time = packet.transmit_header.send_time
+            data_type = packet.data_header.data_type
+            sender = packet.data_header.sender
+            priority = packet.data_header.priority
+            destination = packet.data_header.destination
+            generate_time = packet.data_header.generate_time
 
-        packet_body = packet.body.encode()
+            sequence_num = packet.transmit_header.send_seq_num
+            send_time = packet.transmit_header.send_time
 
-        received_time = record.received_time
+            packet_body = packet.body.encode()
 
-        # update the row from table ReceivedData to set processed=True
-        record.processed = True
+            received_time = record.received_time
 
-        # insert a new row into table ReceivedPackets
-        insert_row = ReceivedPackets(data_id=record.id,
-                                     packet_type=data_type,
-                                     sender=sender,
-                                     priority=priority,
-                                     destination=destination,
-                                     generate_time=generate_time,
-                                     sequence_number=sequence_num,
-                                     send_time=send_time,
-                                     received_time=received_time,
-                                     packet_body=packet_body)
+            # update the row from table ReceivedData to set processed=True
+            record.processed = True
 
-        session.add(insert_row)
+            # insert a new row into table ReceivedPackets
+            insert_row = ReceivedPackets(data_id=record.id,
+                                         packet_type=data_type,
+                                         sender=sender,
+                                         priority=priority,
+                                         destination=destination,
+                                         generate_time=generate_time,
+                                         sequence_number=sequence_num,
+                                         send_time=send_time,
+                                         received_time=received_time,
+                                         packet_body=packet_body)
+
+            session.add(insert_row)
+        except:
+            record.dropped = True
 
