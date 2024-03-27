@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from EosLib.format.definitions import Type
 from EosLib.format.formats.cutdown import CutDown
 from EosLib.format.formats.ping_format import Ping
+from EosLib.format.formats.downlink_header_format import DownlinkCommandFormat, DownlinkCommand
 from EosLib.device import Device
 from EosLib.packet import Packet
 from EosLib.packet.data_header import DataHeader
@@ -108,6 +109,16 @@ def transmitTableInsert(request):
                 cursor.execute("NOTIFY update;")
                 connection.commit()
                 return Response({'message': 'Valve command sent ', 'ack': ack}, status=status.HTTP_200_OK)
+            elif command == "downlink":
+                downlink_body = DownlinkCommandFormat(0, 0, DownlinkCommand.START_REQUEST, [1, 2, 3])
+                downlink_body_bytes = downlink_body.encode()
+                transmitTable.packet_type = Type.DOWNLINK_COMMAND
+                transmitTable.destination = Device.DOWNLINK
+                transmitTable.body = downlink_body_bytes
+                transmitTable.save()
+                cursor.execute("NOTIFY update;")
+                connection.commit()
+                return Response({'message': 'Downlink command sent ', 'ack': ack}, status=status.HTTP_200_OK)
 
             return Response({'message': 'Invalid input or method'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -119,4 +130,4 @@ def transmitTableInsert(request):
         return Response({'message': f'Invalid JSON format: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         # Handle other unexpected errors
-        return Response({'message': f'An error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'message': f'An error occurred: {str(e)} '}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
