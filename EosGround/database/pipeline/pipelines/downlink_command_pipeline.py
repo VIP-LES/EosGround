@@ -50,14 +50,3 @@ class DownlinkCommandPipeline(PipelineBase):
             missing_chunks=missing_chunks)
         record.processed = True
         session.add(insert_row)
-
-        conn_params = get_config(os.path.join('config', 'database.ini'))  # gets config params
-        conn = psycopg2.connect(**conn_params)  # gets connection object
-        conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit
-        cursor = conn.cursor()  # creates cursor
-        cursor_lock = Lock()
-        print("connected to database")
-
-        with cursor_lock:
-            cursor.execute("LISTEN downlink;")  # adds listen
-
