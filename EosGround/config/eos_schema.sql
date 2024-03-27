@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS eos_schema.received_data
     raw_bytes bytea NOT NULL,
     rssi integer NOT NULL,
     processed boolean NOT NULL DEFAULT false,
+    dropped boolean NOT NULL DEFAULT false,
     received_time timestamp without time zone,
     CONSTRAINT received_data_pkey PRIMARY KEY (id)
 );
