@@ -212,3 +212,20 @@ ALTER TABLE IF EXISTS eos_schema.downlink_command
 
 END;
 
+CREATE TABLE IF NOT EXISTS eos_schema.downlink_chunk
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    packet_id integer NOT NULL,
+    chunk_num integer NULL,
+    chunk_body bytea NOT NULL
+);
+
+ALTER TABLE IF EXISTS eos_schema.downlink_chunk
+    ADD CONSTRAINT downlink_chunk_to_received_packet FOREIGN KEY (packet_id)
+    REFERENCES eos_schema.received_packets (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
+END;
+
