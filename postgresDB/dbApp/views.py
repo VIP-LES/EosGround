@@ -110,7 +110,7 @@ def transmitTableInsert(request):
                 connection.commit()
                 return Response({'message': 'Valve command sent ', 'ack': ack}, status=status.HTTP_200_OK)
             elif command == "downlink":
-                downlink_body = DownlinkCommandFormat(0, 0, DownlinkCommand.START_REQUEST, [1, 2, 3])
+                downlink_body = DownlinkCommandFormat(0, 0, DownlinkCommand.START_REQUEST, [])
                 downlink_body_bytes = downlink_body.encode()
                 transmitTable.packet_type = Type.DOWNLINK_COMMAND
                 transmitTable.destination = Device.DOWNLINK
