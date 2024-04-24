@@ -69,7 +69,7 @@ def transmitTableInsert(request):
             transmitTable.priority = Priority.DATA
             transmitTable.generate_time = datetime.now()
 
-            valid_commands = {"cutdown", "ping", "valve", "clear"}
+            valid_commands = {"cutdown", "ping", "valve", "clear", "healthQuery"}
             if command not in valid_commands:
                 return Response({'message': 'Invalid command'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -110,7 +110,7 @@ def transmitTableInsert(request):
                 connection.commit()
                 return Response({'message': 'Valve command sent ', 'ack': ack}, status=status.HTTP_200_OK)
             elif command == "healthQuery":
-                healthQuery_body = HealthQuery(ack)
+                healthQuery_body = HealthQuery(command_parts[1], command_parts[2])
                 healthQuery_body_bytes = healthQuery_body.encode()
                 transmitTable.packet_type = Type.HEALTHQUERY
                 transmitTable.destination = Device.HEALTHQUERY
