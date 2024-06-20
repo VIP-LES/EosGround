@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from EosLib.format.definitions import Type
 from EosLib.format.formats.cutdown import CutDown
 from EosLib.format.formats.ping_format import Ping
+from EosLib.format.formats.health.health_query import HealthQuery
 from EosLib.device import Device
 from EosLib.packet import Packet
 from EosLib.packet.data_header import DataHeader
@@ -68,7 +69,7 @@ def transmitTableInsert(request):
             transmitTable.priority = Priority.DATA
             transmitTable.generate_time = datetime.now()
 
-            valid_commands = {"cutdown", "ping", "valve", "clear"}
+            valid_commands = {"cutdown", "ping", "valve", "clear", "healthQuery"}
             if command not in valid_commands:
                 return Response({'message': 'Invalid command'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -108,6 +109,16 @@ def transmitTableInsert(request):
                 cursor.execute("NOTIFY update;")
                 connection.commit()
                 return Response({'message': 'Valve command sent ', 'ack': ack}, status=status.HTTP_200_OK)
+            elif command == "healthQuery":
+                healthQuery_body = HealthQuery(command_parts[1], command_parts[2])
+                healthQuery_body_bytes = healthQuery_body.encode()
+                transmitTable.packet_type = Type.HEALTHQUERY
+                transmitTable.destination = Device.HEALTHQUERY
+                transmitTable.body = healthQuery_body_bytes
+                transmitTable.save()
+                cursor.execute("NOTIFY update;")
+                connection.commit()
+                return Response({'message': 'Health Query command sent ', 'ack': ack}, status=status.HTTP_200_OK)
 
             return Response({'message': 'Invalid input or method'}, status=status.HTTP_400_BAD_REQUEST)
 
