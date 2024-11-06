@@ -1,6 +1,8 @@
 from collections import namedtuple
 from sqlalchemy.orm import Query, Session
 
+import datetime
+
 from EosLib.format.definitions import Type
 
 from EosGround.database.pipeline.lib.pipeline_base import PipelineBase
@@ -31,6 +33,7 @@ class TelemetryPipeline(PipelineBase):
         print(f"transforming telemetry_pipeline row id={record.id}")
         packet_data = TelemetryData.decode(record.packet_body)
         packet_id = record.id
+        timestamp = datetime.datetime.now()
         temperature = packet_data.temperature
         pressure = packet_data.pressure
         humidity = packet_data.humidity
@@ -40,6 +43,7 @@ class TelemetryPipeline(PipelineBase):
 
         insert_row = Telemetry(
                                packet_id=packet_id,
+                               timestamp=timestamp,
                                temperature=temperature,
                                pressure=pressure,
                                humidity=humidity,
