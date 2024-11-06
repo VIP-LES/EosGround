@@ -8,11 +8,11 @@ from EosGround.database.models.eos.received_packets import ReceivedPackets
 
 from EosGround.database.models.eos.health_query import HealthQuery
 
-from EosLib.format.formats.health.driver_health_report.py import DriverHealthReport
+from EosLib.format.formats.health.driver_health_report import DriverHealthReport
 
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 
-from EosGround.EosGround.database.models.eos.health_report import HealthReport
+from EosGround.database.models.eos.health_report import HealthReport
 
 
 class HealthResponsePipeline(PipelineBase):
