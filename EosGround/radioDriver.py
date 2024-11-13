@@ -38,7 +38,8 @@ print("connected to database")
 # aryan's port:
 # PORT = "/dev/cu.usbserial-FT5PG7VE2"
 #panya's port:
-PORT = "/dev/cu.usbserial-FT5PFML62"
+# PORT = "/dev/cu.usbserial-FT5PFML62"
+PORT = "COM6"
 device = XBeeDevice(PORT, 9600)
 device.open()
 print("connected to xbee")

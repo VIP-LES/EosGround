@@ -33,7 +33,7 @@ class TelemetryPipeline(PipelineBase):
         print(f"transforming telemetry_pipeline row id={record.id}")
         packet_data = TelemetryData.decode(record.packet_body)
         packet_id = record.id
-        timestamp = datetime.datetime.now()
+        timestamp = datetime.datetime.now()  # FIXME
         temperature = packet_data.temperature
         pressure = packet_data.pressure
         humidity = packet_data.humidity

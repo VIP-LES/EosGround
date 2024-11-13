@@ -12,7 +12,7 @@ class Telemetry(TableBase):
 
     id: Mapped[int] = mapped_column(Integer, Identity(start=1), primary_key=True, init=False)
     packet_id: Mapped[int] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
-    timestamp: Mapped[datetime] = mapped_column(DateTime)
+    timestamp: Mapped[DateTime] = mapped_column(DateTime)  # FIXME
     temperature: Mapped[float] = mapped_column(DOUBLE_PRECISION)
     pressure: Mapped[float] = mapped_column(DOUBLE_PRECISION)
     humidity: Mapped[float] = mapped_column(DOUBLE_PRECISION)
