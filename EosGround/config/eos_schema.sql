@@ -195,6 +195,39 @@ ALTER TABLE IF EXISTS eos_schema.e_field
     ON DELETE NO ACTION
     NOT VALID;
 
+CREATE TABLE IF NOT EXISTS eos_schema."sensor_data"
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+    packet_id integer NOT NULL,
+    "timestamp" timestamp without time zone,
+    temperature_celsius double precision,  -- from SHTC3 temperature-humidity sensor
+    relative_humidity_percent double precision,  -- from SHTC3 temperature-humidity sensor
+    temperature_celsius_2 double precision,  -- from BMP388 temperature-pressure sensor
+    pressure_hpa double precision,  -- from BMP388 temperature-pressure sensor
+    altitude_meters double precision,  -- from BMP388 temperature-pressure sensor
+    ambient_light_count integer,  -- from LTR390 uv-light sensor
+    ambient_light_lux double precision,  -- from LTR390 uv-light sensor
+    uv_count integer,  -- from LTR390 uv-light sensor
+    uv_index double precision,  -- from LTR390 uv-light sensor
+    infrared_count integer,  -- from TSL2591 ir-light sensor
+    visible_count integer,  -- from TSL2591 ir-light sensor
+    full_spectrum_count integer,  -- from TSL2591 ir-light sensor
+    ir_visible_lux double precision,  -- from TSL2591 ir-light sensor
+    pm10_standard_ug_m3 integer,  -- from PMSA003I particulate sensor
+    pm25_standard_ug_m3 integer,  -- from PMSA003I particulate sensor
+    pm100_standard_ug_m3 integer,  -- from PMSA003I particulate sensor
+    pm10_environmental_ug_m3 integer,  -- from PMSA003I particulate sensor
+    pm25_environmental_ug_m3 integer,  -- from PMSA003I particulate sensor
+    pm100_environmental_ug_m3 integer,  -- from PMSA003I particulate sensor
+    particulate_03um_per_01L integer,  -- from PMSA003I particulate sensor
+    particulate_05um_per_01L integer,  -- from PMSA003I particulate sensor
+    particulate_10um_per_01L integer,  -- from PMSA003I particulate sensor
+    particulate_25um_per_01L integer,  -- from PMSA003I particulate sensor
+    particulate_50um_per_01L integer,  -- from PMSA003I particulate sensor
+    particulate_100um_per_01L integer,  -- from PMSA003I particulate sensor
+    CONSTRAINT sensor_data_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_packet_id FOREIGN KEY (packet_id) REFERENCES eos_schema.received_packets(id)
+);
 
 END;
 
