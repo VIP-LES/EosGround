@@ -1,4 +1,5 @@
-from sqlalchemy import Identity, Integer, ForeignKey, DOUBLE_PRECISION, DateTime
+from sqlalchemy import Identity, Integer, ForeignKey, DOUBLE_PRECISION, TIMESTAMP
+from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column
 
 from EosGround.database.models import TableBase
@@ -12,7 +13,7 @@ class Telemetry(TableBase):
 
     id: Mapped[int] = mapped_column(Integer, Identity(start=1), primary_key=True, init=False)
     packet_id: Mapped[int] = mapped_column(ForeignKey("eos_schema.received_packets.id"))
-    timestamp: Mapped[DateTime] = mapped_column(DateTime)  # FIXME
+    timestamp: Mapped[datetime] = mapped_column(TIMESTAMP)  # FIXME
     temperature: Mapped[float] = mapped_column(DOUBLE_PRECISION)
     pressure: Mapped[float] = mapped_column(DOUBLE_PRECISION)
     humidity: Mapped[float] = mapped_column(DOUBLE_PRECISION)
