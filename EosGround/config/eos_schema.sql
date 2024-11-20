@@ -229,5 +229,24 @@ CREATE TABLE IF NOT EXISTS eos_schema."sensor_data"
     CONSTRAINT fk_packet_id FOREIGN KEY (packet_id) REFERENCES eos_schema.received_packets(id)
 );
 
+CREATE TABLE IF NOT EXISTS eos_schema.science
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    packet_id int NOT NULL,
+    humidity double precision,
+    barometer double precision,
+    uv_light double precision,
+    ir_light double precision,
+    air_quality double precision,
+    CONSTRAINT received_data_pkey PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS eos_schema.science
+    ADD CONSTRAINT science_to_received_packet FOREIGN KEY (packet_id)
+    REFERENCES eos_schema.received_packets (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
 END;
 
