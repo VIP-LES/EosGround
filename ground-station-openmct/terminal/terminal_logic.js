@@ -20,7 +20,7 @@ setInterval(function() {
         terminal.innerText += `$ ${output}\n`;
         output_pk++;
     }
-}, 3000);
+}, 30); // changed from 3000, trying to make graphs replot faster
 
 
 form.addEventListener("submit", function (event) {

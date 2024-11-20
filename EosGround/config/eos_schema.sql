@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS eos_schema.telemetry
 (
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     packet_id int NOT NULL,
-    time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- just added
+    "timestamp" timestamp without time zone,
     temperature double precision,
     pressure double precision,
     humidity double precision,
