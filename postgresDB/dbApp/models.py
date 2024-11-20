@@ -62,6 +62,42 @@ class Telemetry(models.Model):
         db_table = 'telemetry'
 
 
+class Science(models.Model):
+
+    models.FloatField(blank=True, null=True)
+    models.IntegerField(blank=True, null=True)
+
+    packet = models.ForeignKey(ReceivedPackets, models.DO_NOTHING)
+    temperature_celsius = models.FloatField(blank=True, null=True)  # from SHTC3 temperature-humidity sensor
+    relative_humidity_percent = models.FloatField(blank=True, null=True)  # from SHTC3 temperature-humidity sensor
+    temperature_celsius_2 = models.FloatField(blank=True, null=True)  # from BMP388 temperature-pressure sensor
+    pressure_hpa = models.FloatField(blank=True, null=True)  # from BMP388 temperature-pressure sensor
+    altitude_meters = models.FloatField(blank=True, null=True)  # from BMP388 temperature-pressure sensor
+    ambient_light_count = models.IntegerField(blank=True, null=True)  # from LTR390 uv-light sensor
+    ambient_light_lux = models.FloatField(blank=True, null=True)  # from LTR390 uv-light sensor
+    uv_count = models.IntegerField(blank=True, null=True)  # from LTR390 uv-light sensor
+    uv_index = models.FloatField(blank=True, null=True)  # from LTR390 uv-light sensor
+    infrared_count = models.IntegerField(blank=True, null=True)  # from TSL2591 ir-light sensor
+    visible_count = models.IntegerField(blank=True, null=True)  # from TSL2591 ir-light sensor
+    full_spectrum_count = models.IntegerField(blank=True, null=True)  # from TSL2591 ir-light sensor
+    ir_visible_lux = models.FloatField(blank=True, null=True)  # from TSL2591 ir-light sensor
+    pm10_standard_ug_m3 = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    pm25_standard_ug_m3 = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    pm100_standard_ug_m3 = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    pm10_environmental_ug_m3 = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    pm25_environmental_ug_m3 = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    pm100_environmental_ug_m3 = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    particulate_03um_per_01L = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    particulate_05um_per_01L = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    particulate_10um_per_01L = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    particulate_25um_per_01L = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    particulate_50um_per_01L = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+    particulate_100um_per_01L = models.IntegerField(blank=True, null=True)  # from PMSA003I particulate sensor
+
+    class Meta:
+        managed = False
+        db_table = 'science'
+
 class Temperature(models.Model):
     packet = models.ForeignKey(ReceivedPackets, models.DO_NOTHING)
     temperature = models.FloatField()
