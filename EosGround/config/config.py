@@ -1,8 +1,8 @@
 from configparser import ConfigParser, NoSectionError
 
 
-def get_config(config_file_path: str) -> dict:
-    section = 'postgresql'
+def get_config(config_file_path: str, dbsection = 'postgresql') -> dict:
+    section = dbsection
     config_parser = ConfigParser()
     config_parser.read(config_file_path)
     try:

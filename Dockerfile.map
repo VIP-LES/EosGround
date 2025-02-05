@@ -1,0 +1,39 @@
+# Use an official Node.js image as the base image
+FROM node:16-slim
+
+
+# Install git (if you need to clone the repo inside the Dockerfile)
+# RUN apt-get update && apt-get install -y \
+#     git \
+#     python3.10 \
+#     python3-pip \
+#     python3-dev \
+#     python3-venv \
+#     build-essential \
+#     libpq-dev  # PostgreSQL development libraries required for psycopg2
+
+
+# Clone the repository (if you prefer to clone from GitHub)
+# Set the working directory inside the container
+COPY . /eos-map
+
+WORKDIR /eos-map
+# RUN pip3 install -r requirements.txt
+# Set working directory
+WORKDIR /eos-map/eos-map
+
+
+# RUN ls
+
+
+# Install project dependencies
+RUN npm install
+
+# # Expose the port that the app will run on
+EXPOSE 3000
+
+# # Set the command to start the app
+CMD ["npm", "start"]
+
+# tail the logs so i can explore the file system
+# CMD ["tail", "-f", "/dev/null"]
