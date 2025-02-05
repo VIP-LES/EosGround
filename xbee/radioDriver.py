@@ -20,7 +20,7 @@ from EosLib.format.definitions import Type
 from EosLib.format.formats.cutdown import CutDown
 from EosLib.format.decode_factory import decode_factory
 
-from config.config import get_config
+from EosGround.config.config import get_config
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 
 global sequence_number
