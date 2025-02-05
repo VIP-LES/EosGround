@@ -6,7 +6,7 @@ from EosLib.format.definitions import Type
 from EosGround.database.pipeline.lib.pipeline_base import PipelineBase
 from EosGround.database.models.eos.received_packets import ReceivedPackets
 
-from EosGround.database.models.eos.health_query import HealthQuery
+# from EosGround.database.models.eos.health_query import HealthQuery
 
 from EosLib.format.formats.health.driver_health_report import DriverHealthReport
 
