@@ -11,7 +11,7 @@ const LeafletMap = (props) => {
 
   useEffect(() => {
     const fetchPositions = () => {
-      fetch(`http://127.0.0.1:8000/data/pos/`)
+      fetch(`http://django:8000/data/pos/`)
         .then((response) => response.json())
         .then((data) => {
           setPositions(data.map((pos) => [pos.latitude, pos.longitude]));

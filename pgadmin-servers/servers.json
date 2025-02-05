@@ -1,0 +1,14 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "EOS Ground Station DB",
+            "Group": "Servers",
+            "Host": "postgres",
+            "Port": 5432,
+            "MaintenanceDB": "eos_db",
+            "Username": "postgres",
+            "Password": "password",
+            "SSLMode": "prefer"
+        }
+    }
+}

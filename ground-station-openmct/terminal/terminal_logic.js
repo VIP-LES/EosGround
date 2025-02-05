@@ -5,7 +5,7 @@ let output = null
 let output_pk = 1
 
 setInterval(function() {
-    fetch(`http://127.0.0.1:8000/data/terminalOutput/${output_pk}/`)
+    fetch(`http://django:8000/data/terminalOutput/${output_pk}/`)
     .then(response => response.json())
     .then(data => {
         console.log(data)
@@ -33,7 +33,7 @@ form.addEventListener("submit", function (event) {
     }
 
     terminal.innerText += `$ ${fullCommand}\n`;
-    let response = fetch('http://127.0.0.1:8000/data/insertTransmitTable/', {
+    let response = fetch('http://django:8000/data/insertTransmitTable/', {
         method: 'POST',
         body: JSON.stringify({"input": fullCommand})
     })

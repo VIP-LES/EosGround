@@ -1,0 +1,27 @@
+FROM node:16-slim
+
+# Install git (if you need to clone the repo inside the Dockerfile)
+RUN apt-get update && apt-get install -y git
+
+# Clone the repository (if you prefer to clone from GitHub)
+# Set the working directory inside the container
+
+
+COPY . /ground-station-openmct
+
+# Set working directory
+WORKDIR /ground-station-openmct/ground-station-openmct
+
+# RUN ls
+
+# Install project dependencies using bun
+RUN npm install
+
+# Expose the port that the app will run on
+EXPOSE 8081
+
+# Set the command to start the app with bun
+CMD ["npm", "start"]
+
+# tail the logs so i can explore the file system
+# CMD ["tail", "-f", "/dev/null"]

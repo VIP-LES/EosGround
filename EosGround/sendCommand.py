@@ -11,7 +11,7 @@ import datetime
 
 import os
 
-conn_params = get_config(os.path.join('config', 'database.ini'))
+conn_params = get_config(os.path.join('config', 'database.ini'), dbsection="host-postgresql")
 # conn_params = get_config(os.path.join('EosGround', 'config', 'database.ini'))  # gets config params
 conn = psycopg2.connect(**conn_params)  # gets connection object
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit

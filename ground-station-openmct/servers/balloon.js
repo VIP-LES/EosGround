@@ -61,7 +61,7 @@ Balloon.prototype.pull = function () {
     // currently, if the response is not valid, it will not error, so decrementing inside catch block does not work
     const fetch = require('node-fetch');
 
-    fetch(`http://127.0.0.1:8000/data/tel/${telCounter}`)
+    fetch(`http://django:8000/data/tel/${telCounter}`)
     .then(response => response.json())
     .then(data => {
         console.log(data);
@@ -78,7 +78,7 @@ Balloon.prototype.pull = function () {
     })
     telCounter++;
 
-    fetch(`http://127.0.0.1:8000/data/pos/${posCounter}`)
+    fetch(`http://django:8000/data/pos/${posCounter}`)
     .then (response => response.json())
     .then(data => {
         console.log(data);

@@ -1,0 +1,105 @@
+version: '3'
+
+services:
+
+  # emptycontainer:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.emptycontainer  # Reference the Dockerfile to build the app image
+  #   container_name: testing
+  #   platform: linux/amd64
+  #   volumes:
+  #     - ./app:/app  # Mount local folder if needed for development
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   networks:
+  #     - pg_network
+
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile.django  # Reference the Dockerfile to build the app image
+    platform: linux/amd64
+    container_name: django
+    volumes:
+      - ./app:/app  # Mount local folder if needed for development
+    ports:
+      - "8000:8000"  # Expose app port (this is optional)
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pg_network
+
+  # map:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.map  # Reference the Dockerfile to build the app image
+  #   container_name: map
+  #   volumes:
+  #     - ./app:/app  # Mount local folder if needed for development
+  #   ports:
+  #     - "3000:3000"  # Expose app port (this is optional)
+  #   depends_on:
+  #     - postgres  # Ensure the postgres service is up first
+  #   networks:
+  #     - pg_network
+  
+  groundstation:
+    build:
+      context: .
+      dockerfile: Dockerfile.groundstation  # Reference the Dockerfile to build the app image
+    container_name: groundstation
+    volumes:
+      - ./app:/app  # Mount local folder if needed for development
+    ports:
+      - "8081:8081"  # Expose app port (this is optional)
+    depends_on:
+      - postgres  # Ensure the postgres service is up first
+    networks:
+      - pg_network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: eos_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./EosGround/config/eos_schema.sql:/docker-entrypoint-initdb.d/01-eos_schema.sql
+    networks:
+      - pg_network
+    ports:
+      - "5432:5432"  # Exposing PostgreSQL port for testing (optional)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: les@gatech.edu
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"  # Exposing pgAdmin port
+    volumes:
+      - ./pgadmin-servers/servers.json:/pgadmin4/servers.json
+    networks:
+      - pg_network
+    depends_on:
+      - postgres  # Ensures pgAdmin starts after PostgreSQL
+
+networks:
+  pg_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
