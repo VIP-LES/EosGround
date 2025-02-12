@@ -70,7 +70,7 @@ services:
       POSTGRES_DB: eos_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
-#      - ./EosGround/config/eos_schema.sql:/docker-entrypoint-initdb.d/01-eos_schema.sql
+      - ./EosGround/config/eos_schema.sql:/docker-entrypoint-initdb.d/01-eos_schema.sql
     networks:
       - pg_network
     ports:
