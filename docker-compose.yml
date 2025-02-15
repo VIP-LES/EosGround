@@ -33,6 +33,8 @@ services:
     networks:
       - pg_network
 
+  
+
   # map:
   #   build:
   #     context: .
@@ -47,6 +49,20 @@ services:
   #   networks:
   #     - pg_network
   
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline  # Reference the Dockerfile to build the app image
+#    platform: linux/amd64
+    container_name: pipeline
+    volumes:
+      - ./app:/app  # Mount local folder if needed for development
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pg_network
+
   groundstation:
     build:
       context: .
