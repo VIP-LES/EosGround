@@ -45,12 +45,6 @@ RUN pip install -r requirements.txt
 #RUN python3 manage.py migrate
 # # RUN python3 manage.py migrate
 
-# Copy and set permissions for entrypoint script
-# COPY docker-entrypoint-pipeline.sh /docker-entrypoint-pipeline.sh
-# RUN chmod +x /docker-entrypoint-pipeline.sh
-
-# # Change the CMD to use the entrypoint script
-# CMD ["/docker-entrypoint-pipeline.sh"]
 
 
 ENV PYTHONPATH=/EosGround
@@ -59,7 +53,14 @@ ENV PYTHONPATH=/EosGround
 ENV PYTHONUNBUFFERED=1
 
 # print message to console
-RUN echo "Pipeline is ready to run"
+# RUN echo "Pipeline is ready to run"
+
+# Copy and set permissions for entrypoint script
+COPY docker-entrypoint-pipeline.sh /docker-entrypoint-pipeline.sh
+RUN chmod +x /docker-entrypoint-pipeline.sh
+
+# Change the CMD to use the entrypoint script
+CMD ["/docker-entrypoint-pipeline.sh"]
 
 # Change CMD to run with python -u for unbuffered output
-CMD ["python3", "-u", "EosGround/database/pipeline"]
+# CMD ["python3", "-u", "EosGround/database/pipeline"]

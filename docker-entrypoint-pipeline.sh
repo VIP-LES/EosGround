@@ -19,7 +19,4 @@ cd /EosGround
 PYTHONPATH="/EosGround"
 export PYTHONPATH
 
-echo "past path"
-python3 EosGround/database/pipeline
-
-echo "Pipeline finished"
+python3 -u EosGround/database/pipeline

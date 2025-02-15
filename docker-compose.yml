@@ -53,7 +53,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.pipeline  # Reference the Dockerfile to build the app image
-#    platform: linux/amd64
     container_name: pipeline
     volumes:
       - ./app:/app  # Mount local folder if needed for development
