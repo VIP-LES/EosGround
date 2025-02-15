@@ -1,5 +1,6 @@
 import serial.tools.list_ports
 
+# might not find the port, install xctu and find the port manually
 def find_xbee_port():
     # List available serial ports
     ports = serial.tools.list_ports.comports()

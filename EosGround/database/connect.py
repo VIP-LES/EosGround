@@ -10,3 +10,12 @@ def connect(config_filepath: str = 'database.ini', autoconnect: bool = True,
                      f"@{config['host']}:{config['port']}/{config['database']}"
     engine = create_engine(connect_string, echo=verbose)
     return engine.connect() if autoconnect else engine
+
+def connect_docker(config_filepath: str = 'database.ini', autoconnect: bool = True,
+            verbose: bool = False) -> Connection | Engine:
+    config = Config.get_config(config_filepath)
+    connect_string = f"postgresql+psycopg2://postgres:password"\
+                     f"@localhost:5432/eos_db"
+    engine = create_engine(connect_string, echo=verbose)
+    return engine.connect() if autoconnect else engine
+
