@@ -1,3 +1,6 @@
+# activate the virtual environment
+# source venv/bin/activate
+# run the script with PYTHONPATH="/Users/regmi/Desktop/EosGround" python3 EosGround/radioDriver.py
 from threading import Lock
 import datetime
 import os
@@ -20,13 +23,13 @@ from EosLib.format.definitions import Type
 from EosLib.format.formats.cutdown import CutDown
 from EosLib.format.decode_factory import decode_factory
 
-from config.config import get_config
+from EosGround.config.config import get_config
 from EosGround.database.pipeline.pipelines.raw_data_pipeline import PacketPipeline
 
 global sequence_number
 sequence_number = 0
 
-conn_params = get_config(os.path.join('config', 'database.ini'), dbsection="host-postgresql")  # gets config params
+conn_params = get_config(os.path.join('EosGround/config', 'database.ini'), dbsection="host-postgresql")  # gets config params
 conn = psycopg2.connect(**conn_params)  # gets connection object
 conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)  # sets up auto commit
 cursor = conn.cursor()  # creates cursor
@@ -34,7 +37,9 @@ cursor_lock = Lock()
 print("connected to database")
 
 # sets up digi
-PORT = "COM6"
+
+# Batshal's port
+PORT = "/dev/cu.usbserial-FT5PFML62"
 # aryan's port:
 # PORT = "/dev/cu.usbserial-FT5PG7VE2"
 #panya's port:

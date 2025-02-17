@@ -1,0 +1,4 @@
+run the radiodriver script and also the pipeline script
+
+EX: PYTHONPATH="/Users/regmi/Desktop/EosGround" python3 EosGround/database/pipeline
+and PYTHONPATH="/Users/regmi/Desktop/EosGround" python3 EosGround/radioDriver.py

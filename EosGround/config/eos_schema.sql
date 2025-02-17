@@ -13,7 +13,7 @@
 --     TEMPLATE = template0
 --     IS_TEMPLATE = False;
 
-
+\c eos_db;
 -- SCHEMA: eos_schema
 
 -- DROP SCHEMA IF EXISTS eos_schema ;

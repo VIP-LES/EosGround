@@ -5,6 +5,7 @@ from sqlalchemy.orm import Query, Session, sessionmaker
 import traceback
 
 from EosGround.database.connect import connect
+from EosGround.database.connect import connect_docker
 
 
 class PipelineBase(ABC):
