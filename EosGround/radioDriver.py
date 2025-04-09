@@ -1,5 +1,5 @@
 # activate the virtual environment
-# source venv/bin/activate
+# source .venv/bin/activate
 # run the script with PYTHONPATH="/Users/regmi/Desktop/EosGround" python3 EosGround/radioDriver.py
 from threading import Lock
 import datetime

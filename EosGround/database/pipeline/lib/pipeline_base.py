@@ -4,7 +4,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Query, Session, sessionmaker
 import traceback
 
-from EosGround.database.connect import connect
+# from EosGround.database.connect import connect
 from EosGround.database.connect import connect_docker
 
 
@@ -42,7 +42,7 @@ class PipelineBase(ABC):
         If you choose to override this method, calling `super().__init__(output_directory)`
         at the beginning is required.
         """
-        self.db_engine = connect(config_filepath, autoconnect=False, verbose=debug_mode)
+        self.db_engine = connect_docker(config_filepath, autoconnect=False, verbose=debug_mode)
         self.db = self.db_engine.connect()
         self.record_count = 0
 
