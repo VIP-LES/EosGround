@@ -1,8 +1,0 @@
-run the radiodriver script and also the pipeline script
-
-EX: 
-PYTHONPATH="/Users/regmi/Desktop/EosGround" python3 EosGround/database/pipeline
-and 
-PYTHONPATH="/Users/regmi/Desktop/EosGround" python3 EosGround/radioDriver.py
-
-make sure to check pipeline_base for the correct db (host or docker)
