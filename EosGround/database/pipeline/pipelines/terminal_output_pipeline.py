@@ -28,7 +28,7 @@ class TerminalPipeline(PipelineBase):
         return None
 
     def extract(self, session: Session) -> Query:
-        commands = [Type.CUTDOWN, Type.PING, Type.VALVE]
+        commands = [Type.CUTDOWN, Type.PING, Type.VALVE, Type.DOWNLINK_COMMAND]
         return session.query(ReceivedPackets).filter(ReceivedPackets.packet_type.in_(commands), ReceivedPackets.processed == False)\
             .order_by(ReceivedPackets.id)
 
